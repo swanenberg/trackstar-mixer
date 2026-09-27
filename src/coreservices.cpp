@@ -37,6 +37,7 @@
 #include "preferences/dialog/dlgprefmodplug.h"
 #endif
 #include "skin/skincontrols.h"
+#include "trackstar/bridge.h"
 #include "skin/skinloader.h"
 #ifdef MIXXX_USE_QML
 #include <QQuickWindow>
@@ -780,6 +781,10 @@ void CoreServices::initialize(QApplication* pApp) {
     // them on startup.
     m_pSkinControls = std::make_unique<SkinControls>();
 
+    // TrackStar DJ suite: local bridge (127.0.0.1:7912) for the Bot — controls, load by id, events.
+    m_pTrackStarBridge = std::make_unique<TrackStarBridge>(
+            m_pPlayerManager.get(), m_pTrackCollectionManager.get(), pConfig);
+
     // Load tracks in args.qlMusicFiles (command line arguments) into player
     // 1 and 2:
     const QList<QString>& musicFiles = m_cmdlineArgs.getMusicFiles();
@@ -962,6 +967,7 @@ void CoreServices::finalize() {
     // The player manager has to be deleted before the library to ensure
     // that all modified track metadata of loaded tracks is saved.
     qDebug() << t.elapsed(false).debugMillisWithUnit() << "deleting PlayerManager";
+    m_pTrackStarBridge.reset();
     CLEAR_AND_CHECK_DELETED(m_pPlayerManager);
 
     // Delete the library after the view so there are no dangling pointers to

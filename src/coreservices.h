@@ -21,6 +21,7 @@ class VinylControlManager;
 class TrackCollectionManager;
 class Library;
 class SkinControls;
+class TrackStarBridge;
 class ControlPushButton;
 struct LibraryScanResultSummary;
 
@@ -146,6 +147,7 @@ class CoreServices : public QObject {
     std::shared_ptr<mixxx::ScreensaverManager> m_pScreensaverManager;
 
     std::unique_ptr<SkinControls> m_pSkinControls;
+    std::unique_ptr<TrackStarBridge> m_pTrackStarBridge; // TrackStar DJ suite: local JSON/TCP bridge
     std::unique_ptr<ControlPushButton> m_pTouchShift;
 
     Timer m_runtime_timer;
