@@ -1,0 +1,143 @@
+<!--
+Description:
+  Container for either CoverArt or Spinny (with or without Cover).
+  Displayed next to decks where channel mixer would be.
+Variables:
+  group   : [ChannelN]
+-->
+<Template>
+  <WidgetGroup>
+    <SizePolicy>max,min</SizePolicy>
+    <Layout>vertical</Layout>
+    <Children>
+
+      <WidgetGroup>
+        <SizePolicy>max,min</SizePolicy>
+        <MaximumSize>120,120</MaximumSize>
+        <Layout>vertical</Layout>
+        <Children>
+
+          <!-- Spinny (origineel) -->
+          <WidgetGroup>
+            <ObjectName>SpinnyCover</ObjectName>
+            <Size>120f,120f</Size>
+            <Layout>vertical</Layout>
+            <Children>
+              <Spinny>
+                <TooltipId>spinny</TooltipId>
+                <Size>120f,120f</Size>
+                <Group><Variable name="group"/></Group>
+                <PathBackground scalemode="STRETCH_ASPECT">skin:/graphics/spinny_bg.svg</PathBackground>
+                <PathMask scalemode="STRETCH_ASPECT">skin:/graphics/spinny_mask.svg</PathMask>
+                <PathForeground scalemode="STRETCH_ASPECT">skin:/graphics/spinny_indicator.svg</PathForeground>
+                <PathGhost scalemode="STRETCH_ASPECT">skin:/graphics/spinny_indicator_ghost.svg</PathGhost>
+                <ShowCover>true</ShowCover>
+                <ShowCoverControl>[Skin],show_coverart</ShowCoverControl>
+              </Spinny>
+            </Children>
+            <Connection>
+              <ConfigKey persist="true">[Skin],show_spinnies</ConfigKey>
+              <BindProperty>visible</BindProperty>
+            </Connection>
+          </WidgetGroup>
+
+          <!-- Cover Art -->
+          <WidgetGroup>
+            <ObjectName>SpinnyCover</ObjectName>
+            <SizePolicy>max,max</SizePolicy>
+            <MaximumSize>120,120</MaximumSize>
+            <Layout>vertical</Layout>
+            <Children>
+              <CoverArt>
+                <TooltipId>coverart</TooltipId>
+                <Size>120f,120f</Size>
+                <Group><Variable name="group"/></Group>
+                <DefaultCover scalemode="STRETCH_ASPECT">skin:/graphics/cover_default.svg</DefaultCover>
+                <Connection>
+                  <ConfigKey persist="true">[Skin],show_coverart</ConfigKey>
+                  <BindProperty>visible</BindProperty>
+                </Connection>
+              </CoverArt>
+            </Children>
+            <Connection>
+              <ConfigKey persist="true">[Skin],show_spinnies</ConfigKey>
+              <Transform><Not/></Transform>
+              <BindProperty>visible</BindProperty>
+            </Connection>
+          </WidgetGroup>
+        </Children>
+      </WidgetGroup>
+
+      <WidgetGroup><!-- BPM + toonsoort centraal onder de spinny -->
+        <ObjectName>BpmHugeSync</ObjectName>
+        <Layout>horizontal</Layout>
+        <SizePolicy>max,min</SizePolicy>
+        <MaximumSize>120,-1</MaximumSize>
+        <Children>
+
+          <WidgetGroup><!-- BPM (dubbelt als Sync-knop) -->
+            <Layout>stacked</Layout>
+            <SizePolicy>me,min</SizePolicy>
+            <Children>
+              <!-- Transparante klik-laag over het BPM-getal (neutrale ObjectName = geen sync-icoon):
+                   links = sync_enabled (volg-sync aan/uit), rechts = beatsync_tempo (eenmalig tempo matchen) -->
+              <Template src="skin:/controls/button_2state_right.xml">
+                <SetVariable name="TooltipId">sync_enabled</SetVariable>
+                <SetVariable name="ObjectName">BpmSyncClick</SetVariable>
+                <SetVariable name="Size">78f,34min</SetVariable>
+                <SetVariable name="ConfigKey"><Variable name="group"/>,sync_enabled</SetVariable>
+                <SetVariable name="ConfigKeyRight"><Variable name="group"/>,beatsync_tempo</SetVariable>
+              </Template>
+
+              <Number>
+                <ObjectName>BpmHuge</ObjectName>
+                <Size>78f,34f</Size>
+                <TooltipId>visual_bpm</TooltipId>
+                <Channel><Variable name="chanNum"/></Channel>
+                <NumberOfDigits>1</NumberOfDigits>
+                <Alignment>center</Alignment>
+                <Connection>
+                  <ConfigKey><Variable name="group"/>,visual_bpm</ConfigKey>
+                </Connection>
+              </Number>
+            </Children>
+          </WidgetGroup>
+
+          <WidgetGroup><!-- Toonsoort naast de BPM (dubbelt als Key-Sync-knop) -->
+            <Layout>stacked</Layout>
+            <SizePolicy>max,min</SizePolicy>
+            <Children>
+              <!-- Transparante klik-laag over de key (neutrale ObjectName = geen sync-icoon):
+                   links = sync_key (transponeer naar compatibele key van andere deck),
+                   rechts = reset_key (terug naar originele bestandskey) -->
+              <Template src="skin:/controls/button_2state_right.xml">
+                <SetVariable name="TooltipId">sync_reset_key</SetVariable>
+                <SetVariable name="ObjectName">KeySyncClick</SetVariable>
+                <SetVariable name="Size">42f,34min</SetVariable>
+                <SetVariable name="ConfigKey"><Variable name="group"/>,sync_key</SetVariable>
+                <SetVariable name="ConfigKeyRight"><Variable name="group"/>,reset_key</SetVariable>
+              </Template>
+
+              <Key>
+                <ObjectName>KeyHuge</ObjectName>
+                <TooltipId>visual_key</TooltipId>
+                <Group><Variable name="group"/></Group>
+                <Size>42f,34f</Size>
+                <Alignment>center</Alignment>
+                <Elide>right</Elide>
+                <!-- Verversing: WKey heeft zelf geen listener op de engine-key;
+                     de skin-Connection triggert onConnectedControlChanged.
+                     'visual_key' (zoals LateNight gebruikt) bestaat niet als
+                     control — [ChannelN],key is de echte. -->
+                <Connection>
+                  <ConfigKey><Variable name="group"/>,key</ConfigKey>
+                </Connection>
+              </Key>
+            </Children>
+          </WidgetGroup>
+        </Children>
+      </WidgetGroup>
+
+    </Children>
+  </WidgetGroup>
+</Template>

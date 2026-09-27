@@ -1,0 +1,61 @@
+<!--
+Description:
+  Eén stem-rij (label + mute + horizontale volume-fader) voor Mixxx 2.7 stem-tracks.
+Variables:
+  chanNum : deck-nummer
+  stemNum : stem 1..4
+-->
+<Template>
+  <SetVariable name="stemGroup">[Channel<Variable name="chanNum"/>_Stem<Variable name="stemNum"/>]</SetVariable>
+
+  <WidgetGroup>
+    <ObjectName>StemRow</ObjectName>
+    <Layout>horizontal</Layout>
+    <SizePolicy>me,min</SizePolicy>
+    <Children>
+
+      <WidgetGroup><Size>8f,0min</Size></WidgetGroup>
+
+      <StemLabel>
+        <TooltipId>StemLabel</TooltipId>
+        <ObjectName>StemLabel</ObjectName>
+        <Group>[Channel<Variable name="chanNum"/>]</Group>
+        <StemNum><Variable name="stemNum"/></StemNum>
+        <Size>104f,24f</Size>
+        <Alignment>left</Alignment>
+        <Elide>right</Elide>
+        <Text></Text>
+      </StemLabel>
+
+      <WidgetGroup><Size>6f,0min</Size></WidgetGroup>
+
+      <!-- Mute -->
+      <Template src="skin:/controls/button_2state.xml">
+        <SetVariable name="TooltipId">StemMuteButton</SetVariable>
+        <SetVariable name="ObjectName">StemMuteButton</SetVariable>
+        <SetVariable name="Size">30f,24f</SetVariable>
+        <SetVariable name="Align">center</SetVariable>
+        <SetVariable name="state_0_text">M</SetVariable>
+        <SetVariable name="state_1_text">M</SetVariable>
+        <SetVariable name="ConfigKey"><Variable name="stemGroup"/>,mute</SetVariable>
+      </Template>
+
+      <WidgetGroup><Size>10f,0min</Size></WidgetGroup>
+
+      <!-- Volume (horizontale fader) -->
+      <SliderComposed>
+        <TooltipId>StemVolumeKnob</TooltipId>
+        <ObjectName>StemVolSlider</ObjectName>
+        <Size>160me,22f</Size>
+        <Handle scalemode="STRETCH_ASPECT">skin:/knobs_sliders/stem_volume_handle.svg</Handle>
+        <Slider scalemode="STRETCH">skin:/knobs_sliders/stem_volume_scale.svg</Slider>
+        <Horizontal>true</Horizontal>
+        <Connection>
+          <ConfigKey><Variable name="stemGroup"/>,volume</ConfigKey>
+        </Connection>
+      </SliderComposed>
+
+      <WidgetGroup><Size>10f,0min</Size></WidgetGroup>
+    </Children>
+  </WidgetGroup>
+</Template>

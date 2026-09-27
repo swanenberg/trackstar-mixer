@@ -1,0 +1,25 @@
+<?xml version='1.0' encoding='utf-8'?>
+<MixxxControllerPreset mixxxVersion="2.4.0+" schemaVersion="1">
+    <info>
+        <name>Robot DJ</name>
+        <author>Brecht</author>
+        <description>Virtuele MIDI-link voor de Robot DJ: JSON-commando's over SysEx (python-rtmidi virtual port "RobotDJ").</description>
+    </info>
+    <controller id="RobotDJ">
+        <scriptfiles>
+            <file functionprefix="RobotDJ" filename="RobotDJ-script.js"/>
+        </scriptfiles>
+        <controls>
+            <control>
+                <group>[Master]</group>
+                <key>RobotDJ.incomingData</key>
+                <description>Alle SysEx-berichten van de Robot DJ-daemon</description>
+                <status>0xF0</status>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+        </controls>
+        <outputs/>
+    </controller>
+</MixxxControllerPreset>

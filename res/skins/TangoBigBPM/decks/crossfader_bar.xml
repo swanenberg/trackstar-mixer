@@ -1,0 +1,44 @@
+<!--
+  Crossfader-balk voor TangoBigBPM.
+  Gecentreerd onder de tracklist, horizontaal tussen deck 1 (links) en deck 2 (rechts).
+  Eigen ObjectName (DeckCrossfaderBar) zodat de styling losstaat van de topbar-crossfader.
+  Altijd zichtbaar (niet gated op [Skin],show_xfader).
+-->
+<Template>
+  <WidgetGroup>
+    <ObjectName>DeckCrossfaderBar</ObjectName>
+    <Layout>horizontal</Layout>
+    <SizePolicy>me,min</SizePolicy>
+    <Children>
+
+      <WidgetGroup><Size>1me,1min</Size></WidgetGroup><!-- linker spacer -->
+
+      <Label>
+        <ObjectName>XfaderLabelA</ObjectName>
+        <Text>A</Text>
+        <Size>16f,22f</Size>
+      </Label>
+
+      <SliderComposed>
+        <ObjectName>DeckCrossfaderSlider</ObjectName>
+        <TooltipId>crossfader</TooltipId>
+        <Size>200f,22f</Size>
+        <Handle scalemode="STRETCH_ASPECT">skin:/knobs_sliders/stem_volume_handle.svg</Handle>
+        <Slider scalemode="STRETCH">skin:/knobs_sliders/stem_volume_scale.svg</Slider>
+        <Horizontal>true</Horizontal>
+        <Connection>
+          <ConfigKey>[Master],crossfader</ConfigKey>
+        </Connection>
+      </SliderComposed>
+
+      <Label>
+        <ObjectName>XfaderLabelB</ObjectName>
+        <Text>B</Text>
+        <Size>16f,22f</Size>
+      </Label>
+
+      <WidgetGroup><Size>1me,1min</Size></WidgetGroup><!-- rechter spacer -->
+
+    </Children>
+  </WidgetGroup>
+</Template>

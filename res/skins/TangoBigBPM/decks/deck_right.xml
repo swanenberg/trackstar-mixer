@@ -1,0 +1,234 @@
+<!--
+Description:
+  Een deck als VERTICALE kolom (hoger dan breed). Alles onder elkaar:
+    * spinny + grote BPM (altijd zichtbaar)
+    * artiest/titel + tijd
+    * overview
+    * transport (Play groot + Cue) - altijd zichtbaar
+    * hotcues (2 rijen van 4)
+    * stem-controls (alleen bij stem-track)
+    * horizontale VU
+Variables:
+  chanNum : [ChannelN]
+-->
+<Template>
+  <SetVariable name="group">[Channel<Variable name="chanNum"/>]</SetVariable>
+
+  <SingletonDefinition>
+    <ObjectName>DeckOverviewRow<Variable name="chanNum"/></ObjectName>
+    <Children>
+      <Template src="skin:/decks/row_overview_right.xml"/>
+    </Children>
+  </SingletonDefinition>
+
+  <SingletonDefinition>
+    <ObjectName>DeckTextRow<Variable name="chanNum"/></ObjectName>
+    <Children>
+      <WidgetGroup>
+        <Layout>horizontal</Layout>
+        <Children>
+          <WidgetGroup><!-- Symmetric Artist + Time -->
+            <Layout>horizontal</Layout>
+            <Children>
+              <Template src="skin:/decks/loop_indicator.xml"/>
+              <Template src="skin:/decks/row_text_right.xml"/>
+            </Children>
+            <Connection>
+              <ConfigKey persist="true">[Tango],symmetric_time</ConfigKey>
+              <BindProperty>visible</BindProperty>
+            </Connection>
+          </WidgetGroup>
+
+          <WidgetGroup><!-- Parallel Artist + Time -->
+            <Layout>horizontal</Layout>
+            <Children>
+              <Template src="skin:/decks/loop_indicator.xml"/>
+              <Template src="skin:/decks/row_text_left.xml"/>
+            </Children>
+            <Connection>
+              <ConfigKey persist="true">[Tango],symmetric_time</ConfigKey>
+              <Transform><Not/></Transform>
+              <BindProperty>visible</BindProperty>
+            </Connection>
+          </WidgetGroup>
+        </Children>
+      </WidgetGroup>
+    </Children>
+  </SingletonDefinition>
+
+  <WidgetGroup>
+    <ObjectName>DeckColumn<Variable name="chanNum"/></ObjectName>
+    <Layout>vertical</Layout>
+    <SizePolicy>me,me</SizePolicy>
+    <Children>
+
+      <!-- Spinny + grote BPM, gecentreerd. ALTIJD zichtbaar bovenaan. -->
+      <WidgetGroup>
+        <Layout>horizontal</Layout>
+        <SizePolicy>me,min</SizePolicy>
+        <Children>
+          <WidgetGroup><Size>1me,1min</Size></WidgetGroup>
+
+          <!-- Ronde Play/Pause naast de spinny; midden uitgelijnd met spinny-midden, met aftelteller eronder -->
+          <WidgetGroup>
+            <Layout>vertical</Layout>
+            <SizePolicy>min,min</SizePolicy>
+            <MinimumSize>60,158</MinimumSize>
+            <Children>
+              <WidgetGroup><Size>1min,33f</Size></WidgetGroup>
+              <Template src="skin:/controls/button_2state_right_display.xml">
+                <SetVariable name="ObjectName">SpinnyPlayButton</SetVariable>
+                <SetVariable name="TooltipId">play_cue_set</SetVariable>
+                <SetVariable name="Size">54f,54f</SetVariable>
+                <SetVariable name="state_0_icon">play_deck.svg</SetVariable>
+                <SetVariable name="state_1_icon">pause_deck.svg</SetVariable>
+                <SetVariable name="ConfigKey"><Variable name="group"/>,play</SetVariable>
+                <SetVariable name="ConfigKeyRight"><Variable name="group"/>,cue_set</SetVariable>
+                <SetVariable name="ConfigKeyDisp"><Variable name="group"/>,play_latched</SetVariable>
+              </Template>
+
+              <WidgetGroup><Size>1min,6f</Size></WidgetGroup>
+
+              <!-- Aftelteller (resterende tijd) onder de play-knop -->
+              <NumberPos>
+                <ObjectName>PlayPosition</ObjectName>
+                <TooltipId>track_time</TooltipId>
+                <Size>60f,18f</Size>
+                <Alignment>center</Alignment>
+                <Channel><Variable name="chanNum"/></Channel>
+                <Connection>
+                  <ConfigKey><Variable name="group"/>,playposition</ConfigKey>
+                </Connection>
+              </NumberPos>
+
+              <WidgetGroup><Size>1min,1me</Size></WidgetGroup>
+            </Children>
+          </WidgetGroup>
+          <WidgetGroup><Size>8f,1min</Size></WidgetGroup>
+
+          <WidgetGroup>
+            <ObjectName>SpinnyWell</ObjectName>
+            <SizePolicy>min,min</SizePolicy>
+            <MinimumSize>120,158</MinimumSize>
+            <Layout>vertical</Layout>
+            <Children>
+              <Template src="skin:/decks/spinny_cover_maxi.xml">
+                <SetVariable name="chanNum"><Variable name="chanNum"/></SetVariable>
+              </Template>
+            </Children>
+          </WidgetGroup>
+
+          <!-- Cue naast de spinny -->
+          <WidgetGroup><Size>8f,1min</Size></WidgetGroup>
+          <WidgetGroup>
+            <Layout>vertical</Layout>
+            <SizePolicy>min,min</SizePolicy>
+            <MinimumSize>60,158</MinimumSize>
+            <Children>
+              <WidgetGroup><Size>1min,33f</Size></WidgetGroup>
+              <Template src="skin:/controls/button_2state_right_display.xml">
+                <SetVariable name="TooltipId">cue_default_cue_gotoandstop</SetVariable>
+                <SetVariable name="ObjectName">SpinnyCueButton</SetVariable>
+                <SetVariable name="Size">60f,54f</SetVariable>
+                <SetVariable name="state_0_text">CUE</SetVariable>
+                <SetVariable name="state_1_text">CUE</SetVariable>
+                <SetVariable name="ConfigKey"><Variable name="group"/>,cue_default</SetVariable>
+                <SetVariable name="ConfigKeyRight"><Variable name="group"/>,cue_gotoandstop</SetVariable>
+                <SetVariable name="ConfigKeyDisp"><Variable name="group"/>,cue_indicator</SetVariable>
+              </Template>
+
+              <WidgetGroup><Size>1min,1me</Size></WidgetGroup>
+            </Children>
+          </WidgetGroup>
+
+          <WidgetGroup><Size>1me,1min</Size></WidgetGroup>
+        </Children>
+      </WidgetGroup>
+
+      <WidgetGroup><Size>1min,8f</Size></WidgetGroup>
+
+      <!-- Artiest / titel / tijd -->
+      <WidgetGroup>
+        <Layout>vertical</Layout>
+        <SizePolicy>me,min</SizePolicy>
+        <Children>
+          <SingletonContainer>
+            <ObjectName>DeckTextRow<Variable name="chanNum"/></ObjectName>
+          </SingletonContainer>
+        </Children>
+      </WidgetGroup>
+
+      <!-- Overview onder de tekst -->
+      <WidgetGroup>
+        <Layout>horizontal</Layout>
+        <Size>1me,56f</Size>
+        <Children>
+          <SingletonContainer>
+            <ObjectName>DeckOverviewRow<Variable name="chanNum"/></ObjectName>
+          </SingletonContainer>
+        </Children>
+      </WidgetGroup>
+
+      <WidgetGroup><Size>1min,8f</Size></WidgetGroup>
+
+      <!-- BEAT-FX indicator: alleen zichtbaar bij het deck waar de FX naartoe geroute is -->
+      <Template src="skin:/decks/deck_fx_indicator.xml">
+        <SetVariable name="chanNum"><Variable name="chanNum"/></SetVariable>
+      </Template>
+
+      <!-- Transport verplaatst: Play zit nu in de spinny, Cue (Q) naast de spinny. -->
+
+      <!-- Tempo: [-] rate-slider [+] met rate-% -->
+      <Template src="skin:/decks/tempo_row.xml">
+        <SetVariable name="chanNum"><Variable name="chanNum"/></SetVariable>
+      </Template>
+
+      <WidgetGroup><Size>1min,8f</Size></WidgetGroup>
+
+      <!-- Hotcues: 2 rijen van 4 -->
+      <Template src="skin:/decks/hotcues_deck_column.xml"/>
+
+      <WidgetGroup><Size>1min,8f</Size></WidgetGroup>
+
+      <!-- Stem-controls (alleen bij stem-track) -->
+      <Template src="skin:/decks/stem_strip.xml">
+        <SetVariable name="chanNum"><Variable name="chanNum"/></SetVariable>
+      </Template>
+
+      <WidgetGroup><Size>1min,8f</Size></WidgetGroup>
+
+      <!-- Horizontale VU onder het deck -->
+      <WidgetGroup>
+        <ObjectName>VuMeterClippingBorder</ObjectName>
+        <Layout>horizontal</Layout>
+        <SizePolicy>me,min</SizePolicy>
+        <Children>
+          <VuMeter>
+            <Size>1me,6f</Size>
+            <MinimumSize>60,6</MinimumSize>
+            <MaximumSize>10000,6</MaximumSize>
+            <PathVu scalemode="STRETCH">skin:/graphics/vumeter_level_over.png</PathVu>
+            <PathBack scalemode="STRETCH">skin:/graphics/vumeter_level.png</PathBack>
+            <Horizontal>true</Horizontal>
+            <PeakHoldSize>4</PeakHoldSize>
+            <PeakHoldTime>800</PeakHoldTime>
+            <PeakFallTime>200</PeakFallTime>
+            <PeakFallStep>5</PeakFallStep>
+            <Connection>
+              <ConfigKey>[Channel<Variable name="chanNum"/>],vu_meter</ConfigKey>
+            </Connection>
+          </VuMeter>
+        </Children>
+        <Connection>
+          <ConfigKey persist="true">[Tango],vumeter</ConfigKey>
+          <BindProperty>visible</BindProperty>
+        </Connection>
+      </WidgetGroup>
+
+      <!-- Expanderende ruimte onderaan: duwt alles naar boven zodat
+           BPM + Play altijd zichtbaar blijven als de kolom korter wordt. -->
+      <WidgetGroup><Size>1min,1me</Size></WidgetGroup>
+
+    </Children>
+  </WidgetGroup>
+</Template>

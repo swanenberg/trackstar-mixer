@@ -1,0 +1,24 @@
+<!--
+Description:
+  Stem-controls voor een deck (Mixxx 2.7): 4 rijen label/mute/volume.
+  Alleen zichtbaar als er een stem-track geladen is (stem_count > 0).
+Variables:
+  chanNum : deck-nummer
+-->
+<Template>
+  <WidgetGroup>
+    <ObjectName>StemControls</ObjectName>
+    <Layout>vertical</Layout>
+    <SizePolicy>me,min</SizePolicy>
+    <Children>
+      <Template src="skin:/decks/stem_row.xml"><SetVariable name="stemNum">1</SetVariable></Template>
+      <Template src="skin:/decks/stem_row.xml"><SetVariable name="stemNum">2</SetVariable></Template>
+      <Template src="skin:/decks/stem_row.xml"><SetVariable name="stemNum">3</SetVariable></Template>
+      <Template src="skin:/decks/stem_row.xml"><SetVariable name="stemNum">4</SetVariable></Template>
+    </Children>
+    <Connection>
+      <ConfigKey>[Channel<Variable name="chanNum"/>],stem_count</ConfigKey>
+      <BindProperty>visible</BindProperty>
+    </Connection>
+  </WidgetGroup>
+</Template>
