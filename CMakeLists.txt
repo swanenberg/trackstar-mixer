@@ -420,6 +420,7 @@ endif()
 include(CMakeDependentOption)
 
 option(QT6 "Build with Qt6" ON)
+option(TRACKSTAR_BRANDING "TrackStar DJ Mixer: suite name in the window title" ON)
 option(
   MIXXX_APPIMAGE
   "Build for AppImage distribution (install AppImage-specific desktop file)"
@@ -2151,6 +2152,9 @@ if(APPLE)
     )
     target_compile_definitions(mixxx-lib PUBLIC __AU_EFFECTS__)
   endif()
+endif()
+if(TRACKSTAR_BRANDING)
+  target_compile_definitions(mixxx-lib PUBLIC TRACKSTAR_BRANDING)
 endif()
 
 if(EMSCRIPTEN)

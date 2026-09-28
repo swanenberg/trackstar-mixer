@@ -785,7 +785,13 @@ QDialog::DialogCode MixxxMainWindow::noOutputDlg(bool* continueClicked) {
 }
 
 void MixxxMainWindow::slotUpdateWindowTitle(TrackPointer pTrack) {
+#ifdef TRACKSTAR_BRANDING
+    // TrackStar DJ Mixer (based on Mixxx): the window carries the suite name; the About box,
+    // settings folder and application name stay "Mixxx".
+    QString appTitle = QStringLiteral("TrackStar DJ Mixer");
+#else
     QString appTitle = VersionStore::applicationName();
+#endif
     QString filePath;
 
     // If we have a track, use getInfo() to format a summary string and prepend
