@@ -81,7 +81,7 @@ Description:
             <Children>
               <Library>
                 <BgColor>#585858</BgColor>
-                <FgColor>#eece33</FgColor>
+                <FgColor>#FFC53D</FgColor>
                 <ShowButtonText>false</ShowButtonText>
                 <TrackTableBackgroundColorOpacity>0.2</TrackTableBackgroundColorOpacity>
               </Library>

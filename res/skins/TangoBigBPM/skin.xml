@@ -134,7 +134,7 @@
 -->
     <LaunchImageStyle>
       LaunchImage {
-        background-color: #0f131a;
+        background-color: #0B0D14;
       }
       QLabel {
         image: url(skin:/graphics/logo_160x40.svg);
@@ -147,7 +147,7 @@
         max-height: 40px;
       }
       QProgressBar {
-        background-color: #29303f;
+        background-color: #242B3B;
         border: none;
         min-width: 164px;
         min-height: 3px;
@@ -155,7 +155,7 @@
         max-height: 3px;
       }
       QProgressBar::chunk {
-        background-color: #FF6100;
+        background-color: #FF6A3D;
       }
     </LaunchImageStyle>
   <Children>
@@ -173,9 +173,9 @@
     <!-- RGB-waveform: bas = warm rood, mid = groen, hoog = blauw.
          De drie lagen over elkaar geven een gelaagd, bijna 3D-effect per stem.
          (Vereist Waveform-type "RGB" in Mixxx > Voorkeuren > Golfvormen.) -->
-    <SetVariable name="SignalRGBLowColor">#ff3b30</SetVariable>
-    <SetVariable name="SignalRGBMidColor">#2ee6a0</SetVariable>
-    <SetVariable name="SignalRGBHighColor">#4a7bff</SetVariable>
+    <SetVariable name="SignalRGBLowColor">#FF6A3D</SetVariable>
+    <SetVariable name="SignalRGBMidColor">#FFC53D</SetVariable>
+    <SetVariable name="SignalRGBHighColor">#4FA3FF</SetVariable>
     <SetVariable name="PlayedOverlayColor">#99000000</SetVariable>
     <!-- Cyan end-of-track warning -->
     <SetVariable name="EndOfTrackColor">#00ffff</SetVariable>

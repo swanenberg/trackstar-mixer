@@ -22,11 +22,11 @@ Variables:
     <SignalColor><Variable name="SignalColor"/></SignalColor>
     <SignalLowColor>#dbe5f0</SignalLowColor>
     <SignalMidColor>#8198b0</SignalMidColor>
-    <SignalHighColor>#46586e</SignalHighColor>
+    <SignalHighColor>#4A5568</SignalHighColor>
     <SignalRGBHighColor><Variable name="SignalRGBHighColor"/></SignalRGBHighColor>
     <SignalRGBMidColor><Variable name="SignalRGBMidColor"/></SignalRGBMidColor>
     <SignalRGBLowColor><Variable name="SignalRGBLowColor"/></SignalRGBLowColor>
-    <PlayPosColor>#FF4300</PlayPosColor>
+    <PlayPosColor>#FF2D95</PlayPosColor>
     <PlayedOverlayColor><Variable name="PlayedOverlayColor"/></PlayedOverlayColor>
     <EndOfTrackColor><Variable name="EndOfTrackColor"/></EndOfTrackColor>
     <SlipBorderOutlineColor><Variable name="SlipBorderOutlineColor"/></SlipBorderOutlineColor>
