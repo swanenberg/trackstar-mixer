@@ -34,6 +34,14 @@ void drawWaveformPartLMH(
         int end,
         const WaveformSignalColors& signalColors,
         bool mono = false);
+// TrackStar: smoothed, stacked energy curve (see .cpp)
+void drawWaveformPartEnergy(
+        QPainter* pPainter,
+        ConstWaveformPointer pWaveform,
+        int end,
+        const WaveformSignalColors& signalColors,
+        bool mono);
+
 void drawWaveformPartHSV(
         QPainter* pPainter,
         ConstWaveformPointer pWaveform,

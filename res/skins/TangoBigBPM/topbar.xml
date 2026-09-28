@@ -78,6 +78,15 @@ Description:
 
               <Template src="skin:/mixer/mixer_headphone.xml"/>
 
+              <!-- TrackStar: Bot-status (gevuld door de bridge, cmd bot_status) -->
+              <Label>
+                <ObjectName>TrackStarBotStatus</ObjectName>
+                <SizePolicy>me,f</SizePolicy>
+                <Size>-1me,28f</Size>
+                <Text></Text>
+                <Alignment>left</Alignment>
+              </Label>
+
               <WidgetGroup><Size>0me,1min</Size></WidgetGroup>
 
             </Children>

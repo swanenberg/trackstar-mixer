@@ -8,6 +8,7 @@
 #include "rendergraph/material/unicolormaterial.h"
 #include "rendergraph/vertexupdaters/vertexupdater.h"
 #include "skin/legacy/skincontext.h"
+#include "trackstar/tuning.h"
 #include "track/track.h"
 #include "waveform/renderers/waveformwidgetrenderer.h"
 #include "waveform/waveform.h"
@@ -125,6 +126,15 @@ bool WaveformRenderBeat::preprocessInner() {
             ? rendererBreadth / static_cast<float>(mixxx::kMaxSupportedStems)
             : rendererBreadth;
 
+    // TrackStar: draw the downbeat (the "1") wider than the other beats.
+    // [TrackStar],downbeat_width = line width in px (1 = same as other beats),
+    // [TrackStar],beats_per_bar = bar length used to find the "1" from the
+    // grid marker (repair_grids anchors the "1" on the marker).
+    const float downbeatWidth = static_cast<float>(
+            std::max(1.0, trackstar::tuning(QStringLiteral("downbeat_width"), 3.0)));
+    const int beatsPerBar = std::max(1,
+            static_cast<int>(trackstar::tuning(QStringLiteral("beats_per_bar"), 4.0)));
+
     for (auto it = trackBeats->iteratorFrom(startPosition);
             it != trackBeats->cend() && *it <= endPosition;
             ++it) {
@@ -135,8 +145,11 @@ bool WaveformRenderBeat::preprocessInner() {
 
         xBeatPoint = qRound(xBeatPoint * devicePixelRatio) / devicePixelRatio;
 
-        const float x1 = static_cast<float>(xBeatPoint);
-        const float x2 = x1 + 1.f;
+        const int offset = it.beatOffset();
+        const bool isDownbeat = ((offset % beatsPerBar) + beatsPerBar) % beatsPerBar == 0;
+        const float halfExtra = isDownbeat ? (downbeatWidth - 1.f) / 2.f : 0.f;
+        const float x1 = static_cast<float>(xBeatPoint) - halfExtra;
+        const float x2 = x1 + 1.f + 2.f * halfExtra;
 
         if (m_isSlipRenderer && splitStemTracks) {
             for (int stemIdx = 0; stemIdx < mixxx::kMaxSupportedStems; ++stemIdx) {

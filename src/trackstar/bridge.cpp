@@ -1,5 +1,6 @@
 #include "trackstar/bridge.h"
 
+#include <QApplication>
 #include <QDateTime>
 #include <QHostAddress>
 #include <QJsonArray>
@@ -15,10 +16,11 @@
 #include "mixer/playermanager.h"
 #include "track/track.h"
 #include "util/versionstore.h"
+#include "widget/wlabel.h"
 
 namespace {
 const QString kGroup = QStringLiteral("[TrackStar]");
-const QString kBridgeVersion = QStringLiteral("0.1.0");
+const QString kBridgeVersion = QStringLiteral("0.2.0");
 constexpr qint64 kDoubleTapGuardMs = 600; // PlayerManager clones the deck on a 2nd load within 0.5 s
 
 QString slotKey(const QString& group, const QString& key) {
@@ -370,6 +372,22 @@ QJsonObject TrackStarBridge::handle(const QJsonObject& msg, QTcpSocket* pClient)
     }
     if (cmd == QLatin1String("status")) {
         return {{"connected", true}, {"clients", m_clients.size()}, {"bridge", kBridgeVersion}};
+    }
+    if (cmd == QLatin1String("bot_status")) {
+        // Text for the "TrackStarBotStatus" label in the skin topbar (the Bot's
+        // state / next transition), pushed by robotdj/engine.py. Empty = hide.
+        const QString text = msg.value("text").toString();
+        int found = 0;
+        const auto topLevel = QApplication::topLevelWidgets();
+        for (QWidget* pTop : topLevel) {
+            const auto labels = pTop->findChildren<WLabel*>(QStringLiteral("TrackStarBotStatus"));
+            for (WLabel* pLabel : labels) {
+                pLabel->setText(text);
+                pLabel->setVisible(!text.isEmpty());
+                found++;
+            }
+        }
+        return {{"ok", true}, {"labels", found}};
     }
     Q_UNUSED(pClient);
     return {{"err", QStringLiteral("unknown cmd %1").arg(cmd)}};

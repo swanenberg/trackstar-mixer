@@ -16,6 +16,7 @@
 #include "moc_woverview.cpp"
 #include "preferences/colorpalettesettings.h"
 #include "track/track.h"
+#include "trackstar/tuning.h"
 #include "util/colorcomponents.h"
 #include "util/dnd.h"
 #include "util/duration.h"
@@ -1533,6 +1534,23 @@ bool WOverview::drawNextPixmapPart() {
                 nextCompletion,
                 m_signalColors,
                 !m_stereo);
+        // TrackStar: once the whole waveform is known, replace the plain
+        // overview by the smoothed energy curve (needs the full track for
+        // smoothing and normalisation, so it cannot be drawn incrementally).
+        if (m_actualCompletion >= dataSize - 2 &&
+                trackstar::tuning(QStringLiteral("energy_overview"), 1.0) > 0.0) {
+            painter.resetTransform();
+            painter.setCompositionMode(QPainter::CompositionMode_Source);
+            painter.fillRect(m_waveformSourceImage.rect(), QColor(0, 0, 0, 0));
+            painter.setCompositionMode(QPainter::CompositionMode_SourceOver);
+            painter.translate(0.0, static_cast<double>(m_waveformSourceImage.height()) / 2.0);
+            waveformOverviewRenderer::drawWaveformPartEnergy(
+                    &painter,
+                    pWaveform,
+                    dataSize,
+                    m_signalColors,
+                    !m_stereo);
+        }
     } else if (m_type == OverviewType::HSV) {
         waveformOverviewRenderer::drawWaveformPartHSV(
                 &painter,

@@ -3946,3 +3946,11 @@ WEffectSelector, WEffectChainPresetSelector, #fadeModeCombobox {
 
 /* bibliotheek-zijbalk: gekozen bron als actieve tab (vlak + accenttekst), niet als bruine balk */
 WLibrarySidebar::item:selected { background-color: #1B2130; color: #FF8B63; }
+
+/* ---- Bot-status in de topbar (tekst uit de Bot via de bridge) ---- */
+#TrackStarBotStatus {
+  color: #9AA3B7;
+  font-size: 12px;
+  padding: 0px 10px;
+  qproperty-alignment: 'AlignLeft | AlignVCenter';
+}

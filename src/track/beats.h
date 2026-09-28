@@ -84,6 +84,12 @@ class Beats : private std::enable_shared_from_this<Beats> {
 
         mixxx::audio::FrameDiff_t beatLengthFrames() const;
 
+        /// TrackStar: beat index relative to the current marker (0 = the marker
+        /// itself, which for constant-tempo tracks is the first downbeat).
+        int beatOffset() const {
+            return m_beatOffset;
+        }
+
         // Iterator methods
 
         const value_type& operator*() const {

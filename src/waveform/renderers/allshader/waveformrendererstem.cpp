@@ -1,6 +1,8 @@
 #include "waveform/renderers/allshader/waveformrendererstem.h"
 
 #include <QFont>
+#include <QVarLengthArray>
+#include <algorithm>
 #include <QImage>
 #include <QOpenGLTexture>
 
@@ -10,6 +12,7 @@
 #include "rendergraph/material/rgbamaterial.h"
 #include "rendergraph/vertexupdaters/rgbavertexupdater.h"
 #include "track/track.h"
+#include "trackstar/tuning.h"
 #include "util/assert.h"
 #include "util/math.h"
 #include "waveform/renderers/waveformwidgetrenderer.h"
@@ -198,7 +201,36 @@ bool WaveformRendererStem::preprocessInner() {
                     m_isSlipRenderer ? halfBreadth : halfBreadth + 0.5f},
             {0.f, 0.f, 0.f, 0.f});
 
-    const double maxSamplingRange = visualIncrementPerPixel / 2.0;
+    // TrackStar parallax: every stem gets its own zoom around the play marker and
+    // a small vertical offset, so the front stem (last in the stack order, drawn
+    // on top) runs "faster" than the ones behind it: a depth effect. Audio time
+    // is untouched, all layers meet exactly at the play marker.
+    //   [TrackStar],stem_parallax        depth 0..1 (0 = off; 0.45 = mockup default)
+    //   [TrackStar],stem_parallax_spread vertical spread 0..1 (front lower, back higher)
+    //   [TrackStar],stem_parallax_slip   also in the slip overlay (0/1)
+    const double parallax = m_splitStemTracks
+            ? 0.0
+            : std::clamp(trackstar::tuning(QStringLiteral("stem_parallax"), 0.45), 0.0, 1.0);
+    const double spread = m_splitStemTracks
+            ? 0.0
+            : std::clamp(trackstar::tuning(QStringLiteral("stem_parallax_spread"), 0.30), 0.0, 1.0);
+    const bool parallaxOn = parallax > 0.0 &&
+            (!m_isSlipRenderer || trackstar::tuning(QStringLiteral("stem_parallax_slip"), 0.0) > 0.0);
+    const int numStems = m_stackOrder.size();
+    const double playMarkerFrame = firstVisualFrame +
+            (lastVisualFrame - firstVisualFrame) * m_waveformRenderer->getPlayMarkerPosition();
+    // per stack position: zoom factor (>1 = stretched) and y offset
+    QVarLengthArray<double, mixxx::kMaxSupportedStems> stemZoom(numStems);
+    QVarLengthArray<float, mixxx::kMaxSupportedStems> stemYOffset(numStems);
+    for (int layer = 0; layer < numStems; layer++) {
+        const double depth = numStems > 1
+                ? (static_cast<double>(layer) / (numStems - 1)) - 0.5 // -0.5 (back) .. +0.5 (front)
+                : 0.0;
+        stemZoom[layer] = parallaxOn ? 1.0 + parallax * depth : 1.0;
+        stemYOffset[layer] = parallaxOn
+                ? static_cast<float>(spread * depth * halfBreadth)
+                : 0.f;
+    }
 
     for (int visualIdx = 0; visualIdx < stripLength; visualIdx++) {
         int stemLayer = 0;
@@ -206,6 +238,29 @@ bool WaveformRendererStem::preprocessInner() {
             if (stemIdx >= stemInfo.size()) {
                 continue;
             }
+            // this stem's own visual frame for x (parallax) and sampling window
+            const double zoom = stemZoom[stemLayer];
+            const double stemVisualFrame = playMarkerFrame + (xVisualFrame - playMarkerFrame) / zoom;
+            const double stemSamplingRange = visualIncrementPerPixel / zoom / 2.0;
+            const int visualFrameStart = std::lround(stemVisualFrame - stemSamplingRange);
+            const int visualFrameStop = std::lround(stemVisualFrame + stemSamplingRange);
+            const int visualIndexStart = std::clamp(visualFrameStart * 2, 0, dataSize - 1);
+            const int visualIndexStop =
+                    std::clamp(std::max(visualFrameStop, visualFrameStart + 1) * 2, 0, dataSize - 1);
+            const float fVisualIdx = static_cast<float>(visualIdx) * invDevicePixelRatio;
+            const float yOffset = m_isSlipRenderer ? 0.f : stemYOffset[stemLayer];
+
+            // Find the max values for current eq in the waveform data.
+            // - Max of left and right
+            uchar u8max{};
+            for (int chn = 0; chn < 2; chn++) {
+                // data is interleaved left / right
+                for (int i = visualIndexStart + chn; i < visualIndexStop + chn && i < dataSize; i += 2) {
+                    const WaveformData& waveformData = data[i];
+                    u8max = math_max(u8max, waveformData.stems[stemIdx]);
+                }
+            }
+
             // Stem is drawn twice with different opacity level, this allow to
             // see the maximum signal by transparency
             for (int layerIdx = 0; layerIdx < 2; layerIdx++) {
@@ -214,26 +269,6 @@ bool WaveformRendererStem::preprocessInner() {
                       color_g = stemColor.greenF(),
                       color_b = stemColor.blueF(),
                       color_a = stemColor.alphaF() * (layerIdx ? m_opacity : m_outlineOpacity);
-                const int visualFrameStart = std::lround(xVisualFrame - maxSamplingRange);
-                const int visualFrameStop = std::lround(xVisualFrame + maxSamplingRange);
-
-                const int visualIndexStart = std::max(visualFrameStart * 2, 0);
-                const int visualIndexStop =
-                        std::min(std::max(visualFrameStop, visualFrameStart + 1) * 2, dataSize - 1);
-
-                const float fVisualIdx = static_cast<float>(visualIdx) * invDevicePixelRatio;
-
-                // Find the max values for current eq in the waveform data.
-                // - Max of left and right
-                uchar u8max{};
-                for (int chn = 0; chn < 2; chn++) {
-                    // data is interleaved left / right
-                    for (int i = visualIndexStart + chn; i < visualIndexStop + chn; i += 2) {
-                        const WaveformData& waveformData = data[i];
-
-                        u8max = math_max(u8max, waveformData.stems[stemIdx]);
-                    }
-                }
 
                 // Cast to float
                 float max = static_cast<float>(u8max) * allGain;
@@ -261,13 +296,14 @@ bool WaveformRendererStem::preprocessInner() {
                     height = std::min(height, halfBreadth);
                 }
                 const int yIndex = m_splitStemTracks ? stemIdx : stemLayer;
+                const float yCenter = yIndex * stemBreadth + halfBreadth + yOffset;
                 vertexUpdater.addRectangle(
                         {fVisualIdx - halfStripSize,
-                                yIndex * stemBreadth + halfBreadth - height},
+                                yCenter - height},
                         {fVisualIdx + halfStripSize,
                                 m_isSlipRenderer
-                                        ? yIndex * stemBreadth + halfBreadth
-                                        : yIndex * stemBreadth + halfBreadth + height},
+                                        ? yCenter
+                                        : yCenter + height},
                         {color_r, color_g, color_b, color_a});
             }
             stemLayer++;

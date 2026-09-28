@@ -1669,6 +1669,7 @@ add_library(
   src/track/trackrecord.cpp
   src/track/trackref.cpp
   src/trackstar/bridge.cpp
+  src/trackstar/tuning.cpp
   src/util/autofilereloader.cpp
   src/util/battery/battery.cpp
   src/util/cache.cpp
