@@ -9,9 +9,15 @@ namespace {
 constexpr int kNumStableDeltasRequired = 20;
 
 VSyncThread::VSyncMode defaultVSyncMode() {
-#ifdef __APPLE__
+#if defined(__APPLE__) && !defined(TRACKSTAR_BRANDING)
     return VSyncThread::ST_PLL;
 #else
+    // TrackStar: the PLL on the macOS frame-swap signal drifts on 120 Hz
+    // (ProMotion) displays with heavy stem waveforms: hundreds of dropped
+    // frames per minute and "VisualPlayPosition no transport", after which the
+    // waveform sticks at position 0. The plain timer is stable there
+    // (2026-09-28, [Waveform] VSync 6). Users can still pick PLL in the
+    // preferences.
     return VSyncThread::ST_TIMER;
 #endif
 }
