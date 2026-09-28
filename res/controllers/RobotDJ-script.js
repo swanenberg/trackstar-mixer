@@ -21,7 +21,7 @@
 // loops die wij aanzetten gaan uit, en FROM wordt neutraal (volume 1, EQ vlak, stems open).
 
 var RobotDJ = {};
-RobotDJ.VERSION = "0.4.0";
+RobotDJ.VERSION = "0.4.1";
 RobotDJ.connections = [];
 RobotDJ.posTimer = 0;
 RobotDJ.streamGroups = [];
@@ -35,20 +35,36 @@ RobotDJ.NO_RESTORE = {play: 1, playposition: 1, beatloop_activate: 1, reloop_tog
 // ---- eigen schrijfacties onthouden (handen-detectie) ---------------------------------
 // Elke waarde die wij zetten gaat hierlangs. Meldt Mixxx daarna een ANDERE waarde op zo'n
 // control, dan was dat een mens (fader, knop, FLX4) → {"ev":"human"} naar de Bot.
-RobotDJ.lastSet = {};
+RobotDJ.lastSet = {};       // control -> laatste waarde die wij zetten
+RobotDJ.recent = {};        // control -> de laatste 48 waarden die wij zetten (callbacks komen queued, dus
+                            // tijdens een ramp loopt de melding achter op wat we al schreven)
 RobotDJ.humanOn = true;
 RobotDJ.lastHuman = 0;
+RobotDJ.quietUntil = 0;     // na opruimen/loslaten even geen handen-detectie (veel queued callbacks)
 RobotDJ.setv = function(g, k, v) {
-    RobotDJ.lastSet[g + "," + k] = v;
+    var id = g + "," + k;
+    RobotDJ.lastSet[id] = v;
+    var r = RobotDJ.recent[id] || (RobotDJ.recent[id] = []);
+    r.push(v);
+    if (r.length > 48) { r.shift(); }
     engine.setValue(g, k, v);
+};
+RobotDJ.weSetIt = function(id, v) {
+    var r = RobotDJ.recent[id];
+    if (!r) { return false; }
+    for (var i = r.length - 1; i >= 0; i--) { if (Math.abs(r[i] - v) < 1e-6) { return true; } }
+    return false;
 };
 RobotDJ.onHuman = function(g, k, v) {
     if (!RobotDJ.humanOn) { return; }
-    var last = RobotDJ.lastSet[g + "," + k];
-    if (last !== undefined && Math.abs(last - v) < 1e-6) { return; }        // dat waren wij
+    var id = g + "," + k, now = Date.now();
+    if (now < RobotDJ.quietUntil) { return; }                                // net opgeruimd
+    if (RobotDJ.weSetIt(id, v)) { return; }                                  // dat waren wij (ook een ramp)
+    // Tijdens een choreografie zijn de controls die wij bewegen niet van een mens te onderscheiden
+    // (de callback loopt achter op de ramp); een fader die wij NIET aanraken telt wel.
+    if (RobotDJ.tx && RobotDJ.tx.touched && (id in RobotDJ.tx.touched)) { return; }
     if (k === "play" && v === 0 && engine.getValue(g, "playposition") >= 0.98) { return; }   // plaat was op
-    if (k === "play" && last === undefined) { return; }                     // eerste play na laden: Mixxx zelf
-    var now = Date.now();
+    if (k === "play" && RobotDJ.lastSet[id] === undefined) { return; }        // eerste play na laden: Mixxx zelf
     if (now - RobotDJ.lastHuman < 400) { return; }
     RobotDJ.lastHuman = now;
     RobotDJ.send({ev: "human", group: g, key: k, value: v});
@@ -447,6 +463,7 @@ RobotDJ.tick = function(tx) {
 };
 
 RobotDJ.cleanup = function(tx) {
+    RobotDJ.quietUntil = Date.now() + 2500;   // de terugzet-golf hieronder komt queued binnen
     RobotDJ.stopScratch(tx);
     if (tx.timer) { engine.stopTimer(tx.timer); tx.timer = 0; }
     if (tx.beatConn) { tx.beatConn.disconnect(); tx.beatConn = null; }
@@ -503,6 +520,7 @@ RobotDJ.release = function() {
     if (tx.playConn) { tx.playConn.disconnect(); tx.playConn = null; }
     if (tx.guard) { engine.stopTimer(tx.guard); tx.guard = 0; }
     tx.ramps = [];
+    RobotDJ.quietUntil = Date.now() + 1500;
     tx.phase = "released";
     RobotDJ.tx = null;
     RobotDJ.send({ev: "tx", phase: "released", name: tx.plan.name, from: tx.A, to: tx.B, beat: tx.beat});
