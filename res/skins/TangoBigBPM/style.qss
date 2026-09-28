@@ -3643,3 +3643,306 @@ WKey {
   background-color: transparent;
   border-left: 1px solid #2F384B;
 }
+
+
+/*################################################################
+ ######  TrackStar suite-laag  ##################################
+ ##  Vormentaal van de suite (trackstar/ui/tokens.css + kit.css):
+ ##  vlakke panelen #151A26 met 1px rand #242B3B en 12px radius op
+ ##  een subtiele gradient, knoppen 8px radius, één accent #FF6A3D,
+ ##  systeemfont, kickers gedempt. Deze laag staat bewust ONDERAAN
+ ##  en overschrijft de Tango-regels hierboven. Kleuren: zie de
+ ##  tabel in trackstar/ui/README.md.
+##############################################################*/
+
+/* ---- venster en font ---- */
+#Mixxx {
+  background-color: qlineargradient(x1: 0, y1: 0, x2: 0.35, y2: 1,
+    stop: 0 #12151F, stop: 0.45 #0C0E16, stop: 1 #0A0B11);
+}
+WLabel, WNumber, WNumberPos, WPushButton, WKey, WTime, WTrackProperty,
+WRecordingDuration, QSpinBox, WBeatSpinBox, WOverview #PassthroughLabel,
+WEffectName, WLibraryTextBrowser, WTrackTableView, WLibrarySidebar,
+WSearchLineEdit, WTrackTableViewHeader::section,
+#LibraryFeatureControls QPushButton, #LibraryFeatureControls QLabel,
+#LibraryFeatureControls QRadioButton,
+#MainMenu, #MainMenu QMenu, QToolTip, WCueMenuPopup, WCueMenuPopup QLabel,
+WCueMenuPopup QLineEdit, WTrackTableViewHeader QMenu, WTrackMenu, WTrackMenu QMenu,
+WCoverArtMenu, WLibrarySidebar QMenu, WEffectSelector, WEffectChainPresetSelector,
+WTrackPropertyEditor, #fadeModeCombobox {
+  font-family: ".AppleSystemUIFont", "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+/* ---- panelen ---- */
+#DeckZone,
+#MiddleColumn {
+  background-color: #151A26;
+  border: 1px solid #242B3B;
+  border-radius: 12px;
+}
+#DeckZone { padding: 6px 4px; }
+#MiddleColumn { padding: 4px; }
+#Deck1, #Deck2, #Deck3, #Deck4,
+#DeckColumn1, #DeckColumn2, #DeckColumn3, #DeckColumn4 {
+  background-color: transparent;
+}
+#DeckMini1, #DeckMini2, #DeckMini3, #DeckMini4 {
+  background-color: #1B2130;
+  border: 1px solid #242B3B;
+  border-radius: 10px;
+}
+#DeckMini_TitlePlayPosKeyBPM { background-color: transparent; }
+#MixerbarSection, #CrossfaderContainer {
+  background-color: #151A26;
+  border: 1px solid #242B3B;
+  border-radius: 8px;
+}
+#GuiCover { background-color: rgba(11, 13, 20, 160); }
+
+/* ---- knoppen (ghost = transparant met rand, actief = accent) ---- */
+WPushButton { border-radius: 8px; }
+#GuiToggleButton, #GuiToggleButton2, #RecordingButton,
+#BeatgridButtonToggler, #VinylControlButton[displayValue="0"],
+#VinylModeButton, #VinylCueModeButton, #PassthroughButton,
+#TempoRow #RateDown, #TempoRow #RateUp {
+  background-color: transparent;
+  border: 1px solid #2F384B;
+  border-radius: 8px;
+  color: #9AA3B7;
+  }
+  #GuiToggleButton:hover, #GuiToggleButton2:hover, #RecordingButton:hover,
+  #BeatgridButtonToggler:hover, #VinylControlButton:hover, #VinylModeButton:hover,
+  #TempoRow #RateDown:hover, #TempoRow #RateUp:hover {
+    background-color: #151A26;
+    border: 1px solid #3B465C;
+    color: #F3F5F9;
+  }
+  #GuiToggleButton[displayValue="1"], #GuiToggleButton[displayValue="2"] {
+    background-color: #1B2130;
+    border: 1px solid #3B465C;
+    color: #F3F5F9;
+    }
+    #GuiToggleButton[displayValue="1"]:hover, #GuiToggleButton[displayValue="2"]:hover {
+      border: 1px solid #66708A;
+    }
+#SourcesToggle {
+  background-color: transparent;
+  border: 1px solid #2F384B;
+  border-radius: 8px;
+  color: #9AA3B7;
+  font-size: 13px;
+  font-weight: bold;
+  }
+  #SourcesToggle:hover { color: #F3F5F9; border: 1px solid #3B465C; background-color: #1B2130; }
+  #SourcesToggle[displayValue="1"] {
+    background-color: #FF6A3D;
+    border: 1px solid #FF6A3D;
+    color: #1A1210;
+  }
+
+/* hotcue-pads: vlak, 8px, rand; gezette cues houden hun eigen kleur (uit de track) */
+#SpecialCueButton[displayValue="0"], #HotcueButton[displayValue="0"],
+#CueUnderlay, #PlayIndicator[value="0"] {
+  background-color: #1B2130;
+  border: 1px solid #2F384B;
+  border-radius: 8px;
+  color: #9AA3B7;
+  }
+  #SpecialCueButton[displayValue="0"]:hover, #HotcueButton[displayValue="0"]:hover,
+  #CueButton[displayValue="0"]:hover {
+    border: 1px solid #3B465C;
+    color: #F3F5F9;
+  }
+#HotcueButton[displayValue="1"], #SpecialCueButton[displayValue="1"], #CueButton[displayValue="1"] {
+  border-radius: 8px;
+  }
+
+/* Play en Cue naast de spinny: idle = verhoogd vlak, actief = accent (play) / geel (cue) */
+#SpinnyPlayButton, #SpinnyCueButton {
+  border-radius: 10px;
+  border: 1px solid #2F384B;
+  font-weight: bold;
+  }
+  #SpinnyPlayButton[displayValue="0"], #SpinnyCueButton[displayValue="0"] {
+    background-color: #1B2130;
+    color: #F3F5F9;
+  }
+  #SpinnyPlayButton[displayValue="1"] {
+    background-color: #FF6A3D;
+    border: 1px solid #FF6A3D;
+    color: #1A1210;
+  }
+  #SpinnyCueButton[displayValue="1"] {
+    background-color: #FFC53D;
+    border: 1px solid #FFC53D;
+    color: #1A1210;
+  }
+  #SpinnyPlayButton:hover, #SpinnyCueButton:hover {
+    border: 1px solid #3B465C;
+  }
+  #SpinnyPlayButton[displayValue="1"]:hover { border: 1px solid #FF7A52; background-color: #FF7A52; }
+  #SpinnyCueButton[displayValue="1"]:hover { border: 1px solid #FFD262; background-color: #FFD262; }
+
+/* ---- teksthiërarchie in het deck (zoals de Bot-deckkaart) ---- */
+WLabel#TrackTitle,
+#Deck1 #TrackTitle, #Deck2 #TrackTitle, #Deck3 #TrackTitle, #Deck4 #TrackTitle {
+  color: #F3F5F9;
+  font-weight: bold;
+}
+WLabel#TrackBy, WLabel#TrackByMini, WLabel#TrackComment { color: #9AA3B7; }
+WNumber#BpmHuge { font-weight: bold; }
+WKey#KeyHuge { font-weight: bold; border-left: 1px solid #242B3B; }
+
+/* ---- bibliotheek: als een .panel met .tbl en .list uit de kit ---- */
+#LibraryContainer { background-color: transparent; }
+WTrackTableView, WLibraryTextBrowser, WLibrarySidebar {
+  border: none;
+  background-color: #151A26;
+  alternate-background-color: #10131C;
+  color: #F3F5F9;
+  selection-color: #F3F5F9;
+  selection-background-color: rgba(255, 106, 61, 64);
+  }
+  WLibrarySidebar { border-right: 1px solid #242B3B; }
+  WLibrarySidebar::item { padding: 2px 4px; border-radius: 6px; }
+  WLibrarySidebar::item:selected { background-color: rgba(255, 106, 61, 46); color: #F3F5F9; }
+  WLibrarySidebar::item:hover { background-color: #1B2130; }
+WTrackTableView::item:selected,
+#LibraryBPMButton::item:selected,
+#LibraryPlayedCheckbox::item:selected {
+  background-color: rgba(255, 106, 61, 64);
+  }
+  WTrackTableView::item:!selected:focus {
+    background-color: #1B2130;
+    outline: 1px solid #FF6A3D;
+    color: #F3F5F9;
+  }
+WTrackTableView, WTrackTableView QCheckBox:focus { outline: 1px solid #FF6A3D; }
+WTrackTableView {
+  qproperty-focusBorderColor: #FF6A3D;
+  qproperty-trackPlayedColor: #66708A;
+}
+WTrackTableViewHeader::section {
+  background-color: #151A26;
+  color: #66708A;
+  font-size: 11px;
+  font-weight: bold;
+  border: none;
+  border-bottom: 1px solid #242B3B;
+  border-right: 1px solid #1E2432;
+  padding: 4px 6px;
+}
+WTrackPropertyEditor, WTrackTableView:focus, WLibrarySidebar:focus, WSearchLineEdit:focus {
+  border-color: #FF6A3D;
+}
+WSearchLineEdit {
+  background-color: #10131C;
+  border: 1px solid #2F384B;
+  border-radius: 8px;
+  color: #F3F5F9;
+  padding: 2px 8px;
+  selection-background-color: rgba(255, 106, 61, 90);
+  }
+  WSearchLineEdit:focus { border: 1px solid #FF6A3D; }
+WLibrary QLineEdit, WLibrary QPlainTextEdit, WTrackPropertyEditor, #LibraryBPMSpinBox {
+  color: #F3F5F9;
+  background-color: #10131C;
+  border: 1px solid #2F384B;
+  border-radius: 6px;
+  selection-color: #1A1210;
+  selection-background-color: #FF6A3D;
+}
+
+/* ---- waveforms: rustiger rand, log-donker ---- */
+#WaveformContainer1, #WaveformContainer2, #WaveformContainer3, #WaveformContainer4 {
+  border-top: 1px solid #1E2432;
+  border-bottom: 1px solid #070910;
+}
+
+/* ---- menu's en tooltips ---- */
+QToolTip {
+  background-color: #151A26;
+  color: #F3F5F9;
+  border: 1px solid #2F384B;
+  padding: 4px 6px;
+}
+#MainMenu QMenu, WTrackMenu, WTrackMenu QMenu, WCueMenuPopup, WCoverArtMenu,
+WLibrarySidebar QMenu, WTrackTableViewHeader QMenu, WLibraryTextBrowser QMenu {
+  background-color: #151A26;
+  color: #F3F5F9;
+  border: 1px solid #2F384B;
+  }
+  #MainMenu QMenu::item:selected, WTrackMenu::item:selected, WTrackMenu QMenu::item:selected,
+  WLibrarySidebar QMenu::item:selected, WTrackTableViewHeader QMenu::item:selected,
+  WLibraryTextBrowser QMenu::item:selected {
+    background-color: #1B2130;
+    color: #F3F5F9;
+  }
+
+/* ---- scrollbalken zoals in de apps: dun, transparant spoor, ronde greep ---- */
+QScrollBar:vertical, QScrollBar:horizontal {
+  background: transparent;
+  border: none;
+  margin: 0px;
+}
+QScrollBar:vertical { width: 10px; }
+QScrollBar:horizontal { height: 10px; }
+QScrollBar::handle:vertical, QScrollBar::handle:horizontal {
+  background: #2F384B;
+  border: 2px solid transparent;
+  border-radius: 5px;
+  min-height: 24px;
+  min-width: 24px;
+  }
+  QScrollBar::handle:vertical:hover, QScrollBar::handle:horizontal:hover { background: #3B465C; }
+QScrollBar::add-line, QScrollBar::sub-line,
+QScrollBar::add-page, QScrollBar::sub-page { background: transparent; border: none; height: 0px; width: 0px; }
+
+/* ---- effect-keuzelijsten en losse blokjes in de topbar ---- */
+WEffectSelector, WEffectChainPresetSelector, #fadeModeCombobox {
+  background-color: #10131C;
+  color: #F3F5F9;
+  border: 1px solid #2F384B;
+  border-radius: 8px;
+  padding: 1px 6px;
+  }
+  WEffectSelector:hover, WEffectChainPresetSelector:hover { border: 1px solid #3B465C; }
+  WEffectSelector::drop-down, WEffectChainPresetSelector::drop-down { border: none; background: transparent; }
+  WEffectSelector QAbstractItemView, WEffectChainPresetSelector QAbstractItemView,
+  WEffectSelector QAbstractScrollArea, WEffectChainPresetSelector QAbstractScrollArea {
+    background-color: #151A26;
+    color: #F3F5F9;
+    border: 1px solid #2F384B;
+    selection-background-color: rgba(255, 106, 61, 64);
+    selection-color: #F3F5F9;
+  }
+#UnconfiguredHeadphoneTopbar {
+  background-color: #151A26;
+  border: 1px solid #242B3B;
+  border-radius: 8px;
+  color: #9AA3B7;
+}
+/* Menu/FX-schakelaars boven de bibliotheek: als .tabs (accent-tekst), niet twee gevulde knoppen */
+#SourcesToggle[displayValue="1"] {
+  background-color: #1B2130;
+  border: 1px solid #3B465C;
+  color: #FF8B63;
+}
+
+/* ---- beat-FX-indicator in het deck: als .pill.state (uit = vlak met rand, aan = accentrand) ---- */
+#DeckFxTag { color: #66708A; font-size: 11px; }
+#DeckFxName { color: #F3F5F9; font-size: 12px; }
+#DeckFxUnderlay, #DeckFxPill { border-radius: 8px; }
+#DeckFxUnderlay[displayValue="0"] {
+  background-color: #1B2130;
+  border: 1px solid #2F384B;
+  }
+  #DeckFxUnderlay[displayValue="1"] {
+    background-color: rgba(255, 106, 61, 64);
+    border: 1px solid #FF6A3D;
+  }
+#DeckFxToggle[displayValue="0"]:hover { border: 1px solid #3B465C; border-radius: 8px; }
+#DeckFxToggle[displayValue="1"]:hover { border: 1px solid #FF7A52; border-radius: 8px; }
+
+/* bibliotheek-zijbalk: gekozen bron als actieve tab (vlak + accenttekst), niet als bruine balk */
+WLibrarySidebar::item:selected { background-color: #1B2130; color: #FF8B63; }
