@@ -93,6 +93,7 @@
 #include "widget/wwidget.h"
 #include "widget/wwidgetgroup.h"
 #include "widget/wwidgetstack.h"
+#include "trackstar/wtrackstarbot.h"
 
 using mixxx::skin::SkinManifest;
 
@@ -646,6 +647,11 @@ QList<QWidget*> LegacySkinParser::parseNode(const QDomElement& node) {
         result = wrapWidget(parseLibrarySidebar(node));
     } else if (nodeName == "Library") {
         result = wrapWidget(parseLibrary(node));
+    } else if (nodeName == "TrackStarBot") {
+        // TrackStar DJ: the Bot panel (helper page in a native web view), see trackstar/wtrackstarbot.h
+        WTrackStarBot* pBot = new WTrackStarBot(m_pParent, m_pConfig);
+        commonWidgetSetup(node, pBot);
+        result = wrapWidget(pBot);
     } else if (nodeName == "Key") {
         result = wrapWidget(parseEngineKey(node));
     } else if (nodeName == "Battery") {

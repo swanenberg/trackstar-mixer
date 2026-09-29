@@ -167,6 +167,16 @@ Description:
 
               <WidgetGroup><Size>3f,1min</Size></WidgetGroup>
 
+              <Template src="skin:/controls/button_2state_persist.xml"><!-- TrackStar: middenkolom = Bot (uit) of bibliotheek (aan) -->
+                <SetVariable name="ObjectName">GuiToggleButton</SetVariable>
+                <SetVariable name="Size">44f,20f</SetVariable>
+                <SetVariable name="state_0_text">LIB</SetVariable>
+                <SetVariable name="state_1_text">LIB</SetVariable>
+                <SetVariable name="ConfigKey">[TrackStar],show_library</SetVariable>
+              </Template>
+
+              <WidgetGroup><Size>3f,1min</Size></WidgetGroup>
+
               <Template src="skin:/controls/button_2state_persist.xml"><!-- FX -->
                 <SetVariable name="TooltipId">show_effects</SetVariable>
                 <SetVariable name="ObjectName">GuiToggleButton</SetVariable>

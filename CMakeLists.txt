@@ -1668,8 +1668,10 @@ add_library(
   src/track/tracknumbers.cpp
   src/track/trackrecord.cpp
   src/track/trackref.cpp
+  src/trackstar/botservice.cpp
   src/trackstar/bridge.cpp
   src/trackstar/tuning.cpp
+  src/trackstar/wtrackstarbot.cpp
   src/util/autofilereloader.cpp
   src/util/battery/battery.cpp
   src/util/cache.cpp
@@ -2156,6 +2158,13 @@ if(APPLE)
 endif()
 if(TRACKSTAR_BRANDING)
   target_compile_definitions(mixxx-lib PUBLIC TRACKSTAR_BRANDING)
+endif()
+# TrackStar: the Bot panel's native web view (system WebKit on macOS, stub elsewhere).
+if(APPLE AND NOT IOS)
+  target_sources(mixxx-lib PRIVATE src/trackstar/webview_mac.mm)
+  target_link_libraries(mixxx-lib PRIVATE "-framework WebKit")
+else()
+  target_sources(mixxx-lib PRIVATE src/trackstar/webview_stub.cpp)
 endif()
 
 if(EMSCRIPTEN)

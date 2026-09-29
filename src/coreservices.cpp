@@ -37,6 +37,7 @@
 #include "preferences/dialog/dlgprefmodplug.h"
 #endif
 #include "skin/skincontrols.h"
+#include "trackstar/botservice.h"
 #include "trackstar/bridge.h"
 #include "skin/skinloader.h"
 #ifdef MIXXX_USE_QML
@@ -784,6 +785,9 @@ void CoreServices::initialize(QApplication* pApp) {
     // TrackStar DJ suite: local bridge (127.0.0.1:7912) for the Bot — controls, load by id, events.
     m_pTrackStarBridge = std::make_unique<TrackStarBridge>(
             m_pPlayerManager.get(), m_pTrackCollectionManager.get(), pConfig);
+    // The Bot lives in the Mixer: start its windowless helper now, and give its RobotDJ MIDI port a
+    // moment to appear, because the controllers are scanned right after this (no MIDI hotplug).
+    trackstar::ensureBotService(pConfig, 4000);
 
     // Load tracks in args.qlMusicFiles (command line arguments) into player
     // 1 and 2:

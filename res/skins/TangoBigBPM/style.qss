@@ -3954,3 +3954,7 @@ WLibrarySidebar::item:selected { background-color: #1B2130; color: #FF8B63; }
   padding: 0px 10px;
   qproperty-alignment: 'AlignLeft | AlignVCenter';
 }
+
+/* TrackStar DJ Bot in de middenkolom (WTrackStarBot): de pagina tekent zelf; alleen de melding tot hij er is */
+#TrackStarBot { background-color: #151A26; }
+#TrackStarBotNote { color: #9AA3B7; font-size: 13px; padding: 24px; }

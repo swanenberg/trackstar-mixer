@@ -453,14 +453,40 @@
                               </Children>
                             </WidgetGroup>
 
-                            <WidgetGroup><!-- Tracklist in het midden -->
+                            <WidgetGroup><!-- Midden: de Bot (standaard) of de bibliotheek (knop LIB in de topbar) -->
                               <ObjectName>MiddleColumn</ObjectName>
                               <Layout>vertical</Layout>
                               <SizePolicy>me,me</SizePolicy>
                               <Children>
-                                <SingletonContainer>
-                                  <ObjectName>Library_Singleton</ObjectName>
-                                </SingletonContainer>
+                                <WidgetGroup><!-- TrackStar DJ Bot: pagina van de Bot-dienst (127.0.0.1:7913) -->
+                                  <ObjectName>TrackStarBotPanel</ObjectName>
+                                  <Layout>vertical</Layout>
+                                  <SizePolicy>me,me</SizePolicy>
+                                  <Children>
+                                    <TrackStarBot>
+                                      <ObjectName>TrackStarBot</ObjectName>
+                                      <SizePolicy>me,me</SizePolicy>
+                                    </TrackStarBot>
+                                  </Children>
+                                  <Connection>
+                                    <ConfigKey persist="true">[TrackStar],show_library</ConfigKey>
+                                    <Transform><Not/></Transform>
+                                    <BindProperty>visible</BindProperty>
+                                  </Connection>
+                                </WidgetGroup>
+                                <WidgetGroup>
+                                  <Layout>vertical</Layout>
+                                  <SizePolicy>me,me</SizePolicy>
+                                  <Children>
+                                    <SingletonContainer>
+                                      <ObjectName>Library_Singleton</ObjectName>
+                                    </SingletonContainer>
+                                  </Children>
+                                  <Connection>
+                                    <ConfigKey persist="true">[TrackStar],show_library</ConfigKey>
+                                    <BindProperty>visible</BindProperty>
+                                  </Connection>
+                                </WidgetGroup>
                                 <Template src="skin:/decks/crossfader_bar.xml"/>
                               </Children>
                             </WidgetGroup>
