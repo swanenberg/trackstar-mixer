@@ -1,6 +1,7 @@
 #include "wstemlabel.h"
 
 #include "moc_wstemlabel.cpp"
+#include "trackstar/tuning.h"
 #include "util/logger.h"
 
 const mixxx::Logger kLogger("WStemLabel");
@@ -55,7 +56,7 @@ void WStemLabel::slotTrackLoaded(TrackPointer pTrack) {
 }
 
 void WStemLabel::updateLabel() {
-    QColor color = m_stemInfo.getColor();
+    QColor color = trackstar::displayColor(m_stemInfo.getColor());
     QString text = m_stemInfo.getLabel();
     setTextColor(color);
     setLabelText(text);

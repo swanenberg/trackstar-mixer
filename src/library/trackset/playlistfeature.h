@@ -18,7 +18,8 @@ class PlaylistFeature : public BasePlaylistFeature {
   public:
     PlaylistFeature(
             Library* pLibrary,
-            UserSettingsPointer pConfig);
+            UserSettingsPointer pConfig,
+            PlaylistDAO::HiddenType type = PlaylistDAO::PLHT_NOT_HIDDEN);
     ~PlaylistFeature() override = default;
 
     QVariant title() override;
@@ -43,11 +44,19 @@ class PlaylistFeature : public BasePlaylistFeature {
 
   protected:
     void decorateChild(TreeItem* pChild, int playlistId) override;
+    PlaylistDAO::HiddenType newPlaylistType() const override {
+        return m_type;
+    }
     QList<IdAndLabel> createPlaylistLabels();
     QModelIndex constructChildModel(int selectedId);
 
   private:
     QString getRootViewHtml() const override;
+    bool isSets() const {
+        return m_type == PlaylistDAO::PLHT_TRACKSTAR_SET;
+    }
+
+    const PlaylistDAO::HiddenType m_type; // PLHT_NOT_HIDDEN = Playlists, PLHT_TRACKSTAR_SET = Sets
 
     parented_ptr<QAction> m_pShufflePlaylistAction;
     parented_ptr<QAction> m_pOrderByCurrentPosAction;

@@ -344,7 +344,7 @@ void BasePlaylistFeature::slotDuplicatePlaylist() {
         }
     }
 
-    int newPlaylistId = m_playlistDao.createPlaylist(name);
+    int newPlaylistId = m_playlistDao.createPlaylist(name, newPlaylistType());
 
     if (newPlaylistId != kInvalidPlaylistId) {
         m_playlistDao.copyPlaylistTracks(oldPlaylistId, newPlaylistId);
@@ -395,7 +395,7 @@ void BasePlaylistFeature::slotCreatePlaylist() {
         }
     }
 
-    int playlistId = m_playlistDao.createPlaylist(name);
+    int playlistId = m_playlistDao.createPlaylist(name, newPlaylistType());
 
     if (playlistId == kInvalidPlaylistId) {
         QMessageBox::warning(nullptr,
@@ -579,7 +579,7 @@ void BasePlaylistFeature::slotCreateImportPlaylist() {
             ++i;
         }
 
-        lastPlaylistId = m_playlistDao.createPlaylist(name);
+        lastPlaylistId = m_playlistDao.createPlaylist(name, newPlaylistType());
         if (lastPlaylistId == kInvalidPlaylistId) {
             QMessageBox::warning(nullptr,
                     tr("Playlist Creation Failed"),

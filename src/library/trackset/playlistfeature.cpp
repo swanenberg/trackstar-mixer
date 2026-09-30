@@ -20,15 +20,24 @@
 #include "widget/wlibrarysidebar.h"
 #include "widget/wtracktableview.h"
 
-PlaylistFeature::PlaylistFeature(Library* pLibrary, UserSettingsPointer pConfig)
+PlaylistFeature::PlaylistFeature(Library* pLibrary,
+        UserSettingsPointer pConfig,
+        PlaylistDAO::HiddenType type)
         : BasePlaylistFeature(pLibrary,
                   pConfig,
                   new PlaylistTableModel(nullptr,
                           pLibrary->trackCollectionManager(),
-                          "mixxx.db.model.playlist"),
-                  QStringLiteral("PLAYLISTHOME"),
+                          type == PlaylistDAO::PLHT_TRACKSTAR_SET
+                                  ? "mixxx.db.model.trackstar_set"
+                                  : "mixxx.db.model.playlist"),
+                  type == PlaylistDAO::PLHT_TRACKSTAR_SET
+                          ? QStringLiteral("TRACKSTARSETSHOME")
+                          : QStringLiteral("PLAYLISTHOME"),
                   QStringLiteral("playlist"),
-                  QStringLiteral("PlaylistsCountsDurations")) {
+                  type == PlaylistDAO::PLHT_TRACKSTAR_SET
+                          ? QStringLiteral("TrackStarSetsCountsDurations")
+                          : QStringLiteral("PlaylistsCountsDurations")),
+          m_type(type) {
     // construct child model
     std::unique_ptr<TreeItem> pRootItem = TreeItem::newRoot(this);
     m_pSidebarModel->setRootItem(std::move(pRootItem));
@@ -62,7 +71,7 @@ PlaylistFeature::PlaylistFeature(Library* pLibrary, UserSettingsPointer pConfig)
 }
 
 QVariant PlaylistFeature::title() {
-    return tr("Playlists");
+    return isSets() ? QStringLiteral("Sets") : tr("Playlists");
 }
 
 void PlaylistFeature::onRightClick(const QPoint& globalPos) {
@@ -187,8 +196,7 @@ QList<BasePlaylistFeature::IdAndLabel> PlaylistFeature::createPlaylistLabels() {
             "  WHERE Playlists.hidden = %2 "
             "  GROUP BY Playlists.id")
                                   .arg(m_countsDurationTableName,
-                                          QString::number(
-                                                  PlaylistDAO::PLHT_NOT_HIDDEN));
+                                          QString::number(m_type));
     queryString.append(
             mixxx::DbConnection::collateLexicographically(
                     " ORDER BY sort_name"));
@@ -298,13 +306,13 @@ void PlaylistFeature::slotOrderTracksByCurrentPosition() {
 }
 
 void PlaylistFeature::slotUnlockAllPlaylists() {
-    m_playlistDao.setPlaylistsLockedByType(PlaylistDAO::PLHT_NOT_HIDDEN, false);
+    m_playlistDao.setPlaylistsLockedByType(m_type, false);
 }
 
 void PlaylistFeature::slotDeleteAllUnlockedPlaylists() {
     // Collect playlists to display the count
     const QList<QPair<int, QString>> playlists =
-            m_playlistDao.getUnlockedPlaylists(PlaylistDAO::PLHT_NOT_HIDDEN);
+            m_playlistDao.getUnlockedPlaylists(m_type);
     if (playlists.size() <= 0) {
         return;
     }
@@ -387,7 +395,7 @@ void PlaylistFeature::decorateChild(TreeItem* item, int playlistId) {
 void PlaylistFeature::slotPlaylistTableChanged(int playlistId) {
     // qDebug() << "PlaylistFeature::slotPlaylistTableChanged() playlistId:" << playlistId;
     enum PlaylistDAO::HiddenType type = m_playlistDao.getHiddenType(playlistId);
-    if (type != PlaylistDAO::PLHT_NOT_HIDDEN &&  // not a regular playlist
+    if (type != m_type &&                        // not one of ours (playlist or set)
             type != PlaylistDAO::PLHT_UNKNOWN) { // not a deleted playlist
         return;
     }
@@ -420,7 +428,7 @@ void PlaylistFeature::slotPlaylistContentOrLockChanged(const QSet<int>& playlist
     // qDebug() << "PlaylistFeature::slotPlaylistContentOrLockChanged() playlistId:" << playlistIds;
     QSet<int> idsToBeUpdated;
     for (const auto playlistId : std::as_const(playlistIds)) {
-        if (m_playlistDao.getHiddenType(playlistId) == PlaylistDAO::PLHT_NOT_HIDDEN) {
+        if (m_playlistDao.getHiddenType(playlistId) == m_type) {
             idsToBeUpdated.insert(playlistId);
         }
     }
@@ -433,7 +441,7 @@ void PlaylistFeature::slotPlaylistContentOrLockChanged(const QSet<int>& playlist
 void PlaylistFeature::slotPlaylistTableRenamed(int playlistId, const QString& newName) {
     Q_UNUSED(newName);
     // qDebug() << "PlaylistFeature::slotPlaylistTableRenamed() playlistId:" << playlistId;
-    if (m_playlistDao.getHiddenType(playlistId) == PlaylistDAO::PLHT_NOT_HIDDEN) {
+    if (m_playlistDao.getHiddenType(playlistId) == m_type) {
         // Maybe we need to re-sort the sidebar items, so call slotPlaylistTableChanged()
         // in order to rebuild the model, not just updateChildModel()
         slotPlaylistTableChanged(playlistId);
@@ -441,6 +449,16 @@ void PlaylistFeature::slotPlaylistTableRenamed(int playlistId, const QString& ne
 }
 
 QString PlaylistFeature::getRootViewHtml() const {
+    if (isSets()) {
+        return QStringLiteral(
+                "<h2>Sets</h2>"
+                "<p>A set is a list whose order is (mostly) fixed: a mix recognised in "
+                "TrackStar DJ Sets, a set plan, or a set you played yourself. The Bot plays a set "
+                "in its order and only does the transitions.</p>"
+                "<p>Playlists are looser: a downloaded playlist or a folder, the Bot picks the "
+                "order itself. Turn a playlist into a set in TrackStar DJ Ready (⋯ › Make it a set).</p>"
+                "<a style=\"color:#FF6A3D;\" href=\"create\">Create New Set</a>");
+    }
     QString playlistsTitle = tr("Playlists");
     QString playlistsSummary =
             tr("Playlists are ordered lists of tracks that allow you to plan "

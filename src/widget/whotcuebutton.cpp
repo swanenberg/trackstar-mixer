@@ -1,5 +1,7 @@
 #include "widget/whotcuebutton.h"
 
+#include "trackstar/tuning.h"
+
 #include <widget/hotcuedrag.h>
 
 #include <QApplication>
@@ -313,7 +315,7 @@ void WHotcueButton::slotColorChanged(double color) {
     VERIFY_OR_DEBUG_ASSERT(color >= 0 && color <= 0xFFFFFF) {
         return;
     }
-    QColor cueColor = QColor::fromRgb(static_cast<QRgb>(color));
+    QColor cueColor = trackstar::displayColor(QColor::fromRgb(static_cast<QRgb>(color)));
     m_bCueColorDimmed = Color::isDimColorCustom(cueColor, m_cueColorDimThreshold);
 
     QString style =

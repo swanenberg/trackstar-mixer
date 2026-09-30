@@ -92,6 +92,10 @@ class BasePlaylistFeature : public BaseTrackSetFeature {
 
     /// borrows pChild which must not be null, TODO: use gsl::not_null
     virtual void decorateChild(TreeItem* pChild, int playlistId) = 0;
+    /// TrackStar: the type new/duplicated/imported lists get (Playlists vs. Sets feature).
+    virtual PlaylistDAO::HiddenType newPlaylistType() const {
+        return PlaylistDAO::PLHT_NOT_HIDDEN;
+    }
     virtual void addToAutoDJ(PlaylistDAO::AutoDJSendLoc loc);
 
     int playlistIdFromIndex(const QModelIndex& index) const;

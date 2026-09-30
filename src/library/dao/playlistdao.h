@@ -20,6 +20,9 @@ class PlaylistDAO : public QObject, public virtual DAO {
         PLHT_NOT_HIDDEN = 0,
         PLHT_AUTO_DJ = 1,
         PLHT_SET_LOG = 2,
+        // TrackStar: a set = an ordered list whose order is (mostly) fixed (recognised mix, set plan,
+        // gig). Shown as "Sets" in the sidebar instead of crates; the suite writes hidden=3 directly.
+        PLHT_TRACKSTAR_SET = 3,
         PLHT_UNKNOWN = -1
     };
 

@@ -201,6 +201,7 @@ class Library: public QObject {
     parented_ptr<AutoDJFeature> m_pAutoDJFeature;
     parented_ptr<PlaylistFeature> m_pPlaylistFeature;
     parented_ptr<CrateFeature> m_pCrateFeature;
+    parented_ptr<PlaylistFeature> m_pSetFeature; // TrackStar: "Sets" (hidden 3) instead of crates
     parented_ptr<BrowseFeature> m_pBrowseFeature;
     parented_ptr<AnalysisFeature> m_pAnalysisFeature;
     QFont m_trackTableFont;

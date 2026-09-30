@@ -40,4 +40,9 @@ double tuning(const QString& key, double defaultValue) {
     return it.value()->get();
 }
 
+QColor displayColor(const QColor& trackColor) {
+    // #F3F5F9 = the suite's ink token (trackstar/ui/tokens.css), "white" everywhere else too
+    return tuning(QStringLiteral("mono_colors"), 1.0) > 0.0 ? QColor(0xF3, 0xF5, 0xF9) : trackColor;
+}
+
 } // namespace trackstar

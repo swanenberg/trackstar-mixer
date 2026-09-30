@@ -26,6 +26,7 @@
 #include <QTcpServer>
 #include <QTimer>
 #include <memory>
+#include <vector>
 
 #include "control/controlproxy.h"
 #include "control/controlpushbutton.h"
@@ -84,6 +85,8 @@ class TrackStarBridge : public QObject {
     std::unique_ptr<ControlPushButton> m_pHandoff;
     std::unique_ptr<ControlPushButton> m_pHumanDetect;
     std::unique_ptr<ControlProxy> m_pHandoffWatch;
+    std::vector<std::unique_ptr<ControlPushButton>> m_suiteButtons;
+    std::vector<std::unique_ptr<ControlProxy>> m_suiteWatches;
 
     QTimer m_streamTimer;
     QStringList m_streamGroups;

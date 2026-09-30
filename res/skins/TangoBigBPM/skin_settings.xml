@@ -30,7 +30,7 @@ Description:
             <Children>
               <Label>
                 <ObjectName>CategoryLabel</ObjectName>
-                <Text>Decks</Text>
+                <Text>View</Text>
                 <Size>160me,21f</Size>
               </Label>
 
@@ -52,6 +52,22 @@ Description:
               </PushButton>
             </Children>
           </WidgetGroup>
+
+          <!-- TrackStar: toggles that used to sit in the top bar -->
+          <Template src="skin:/controls/skin_settings_button_2state.xml">
+            <SetVariable name="text">Waveforms</SetVariable>
+            <SetVariable name="Setting">[Skin],show_waveforms</SetVariable>
+          </Template>
+          <Template src="skin:/controls/skin_settings_button_2state.xml">
+            <SetVariable name="text">Mic / Aux</SetVariable>
+            <SetVariable name="Setting">[Skin],show_microphones</SetVariable>
+          </Template>
+
+          <Label>
+            <ObjectName>CategoryLabel</ObjectName>
+            <Text>Decks</Text>
+            <Size>160me,21f</Size>
+          </Label>
 
           <Template src="skin:/controls/skin_settings_button_2state.xml">
             <SetVariable name="text">4 Decks</SetVariable>

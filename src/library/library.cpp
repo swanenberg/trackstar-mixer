@@ -117,7 +117,17 @@ Library::Library(
 #endif
 
     m_pCrateFeature = make_parented<CrateFeature>(this, m_pConfig);
+#ifdef TRACKSTAR_BRANDING
+    // TrackStar: "Sets" replaces "Crates" in the sidebar. Crates have no order; a set is an ordered
+    // list (Playlists.hidden = PLHT_TRACKSTAR_SET) whose order the Bot keeps. The crate feature
+    // still exists (track menu, existing crates) but has no sidebar entry.
+    m_pSetFeature = make_parented<PlaylistFeature>(this,
+            UserSettingsPointer(m_pConfig),
+            PlaylistDAO::PLHT_TRACKSTAR_SET);
+    addFeature(m_pSetFeature);
+#else
     addFeature(m_pCrateFeature);
+#endif
 #ifdef __ENGINEPRIME__
     connect(m_pCrateFeature,
             &CrateFeature::exportAllCrates,
@@ -160,6 +170,12 @@ Library::Library(
             &CrateFeature::analyzeTracks,
             m_pAnalysisFeature,
             &AnalysisFeature::analyzeTracks);
+#ifdef TRACKSTAR_BRANDING
+    connect(m_pSetFeature,
+            &PlaylistFeature::analyzeTracks,
+            m_pAnalysisFeature,
+            &AnalysisFeature::analyzeTracks);
+#endif
     connect(this,
             &Library::analyzeTracks,
             m_pAnalysisFeature,

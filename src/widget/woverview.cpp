@@ -514,7 +514,7 @@ void WOverview::updateCues(const QList<CuePointer> &loadedCues) {
 
         if (pMark != nullptr && pMark->isValid() && pMark->isVisible()
             && pMark->getSamplePosition() != Cue::kNoPosition) {
-            QColor newColor = mixxx::RgbColor::toQColor(currentCue->getColor());
+            QColor newColor = trackstar::displayColor(mixxx::RgbColor::toQColor(currentCue->getColor()));
             if (newColor != pMark->fillColor() || newColor != pMark->m_textColor) {
                 pMark->setBaseColor(newColor, m_dimBrightThreshold);
             }

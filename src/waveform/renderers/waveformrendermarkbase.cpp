@@ -2,6 +2,7 @@
 
 #include "moc_waveformrendermarkbase.cpp"
 #include "track/track.h"
+#include "trackstar/tuning.h"
 #include "waveform/renderers/waveformwidgetrenderer.h"
 
 WaveformRenderMarkBase::WaveformRenderMarkBase(
@@ -74,7 +75,7 @@ void WaveformRenderMarkBase::updateMarksFromCues() {
         }
 
         QString newLabel = pCue->getLabel();
-        QColor newColor = mixxx::RgbColor::toQColor(pCue->getColor());
+        QColor newColor = trackstar::displayColor(mixxx::RgbColor::toQColor(pCue->getColor()));
         pMark->setText(newLabel);
         pMark->setBaseColor(newColor, dimBrightThreshold);
         if (pMark->isJump()) {

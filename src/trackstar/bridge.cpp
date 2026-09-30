@@ -5,6 +5,7 @@
 #include <QHostAddress>
 #include <QJsonArray>
 #include <QJsonDocument>
+#include <QProcess>
 #include <QTcpSocket>
 #include <QVariant>
 #include <QtDebug>
@@ -46,6 +47,23 @@ TrackStarBridge::TrackStarBridge(PlayerManager* pPlayerManager,
     m_pHandoffWatch->connectValueChanged(this, [this](double v) {
         broadcast(QJsonObject{{"ev", "handoff_button"}, {"value", v}});
     });
+
+    // Suite switcher in the topbar (Ready | Sets | Mixer): a press opens or focuses the other app.
+    // `open -b` starts the app when it is not running and brings it to the front when it is.
+    const QList<QPair<QString, QString>> suiteApps = {
+            {QStringLiteral("open_ready"), QStringLiteral("com.brechtdesign.trackstardj")},
+            {QStringLiteral("open_sets"), QStringLiteral("com.brechtdesign.trackstardj.sets")}};
+    for (const auto& [key, bundleId] : suiteApps) {
+        auto pButton = std::make_unique<ControlPushButton>(ConfigKey(kGroup, key));
+        auto pWatch = std::make_unique<ControlProxy>(ConfigKey(kGroup, key), this);
+        pWatch->connectValueChanged(this, [bundleId](double v) {
+            if (v > 0) {
+                QProcess::startDetached(QStringLiteral("/usr/bin/open"), {QStringLiteral("-b"), bundleId});
+            }
+        });
+        m_suiteButtons.push_back(std::move(pButton));
+        m_suiteWatches.push_back(std::move(pWatch));
+    }
 
     // Deck events: track loaded / play, like the RobotDJ controller script sends them.
     const int decks = m_pPlayerManager ? m_pPlayerManager->numberOfDecks() : 0;

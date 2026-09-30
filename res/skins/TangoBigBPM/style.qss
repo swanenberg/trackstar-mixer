@@ -3958,3 +3958,90 @@ WLibrarySidebar::item:selected { background-color: #1B2130; color: #FF8B63; }
 /* TrackStar DJ Bot in de middenkolom (WTrackStarBot): de pagina tekent zelf; alleen de melding tot hij er is */
 #TrackStarBot { background-color: #151A26; }
 #TrackStarBotNote { color: #9AA3B7; font-size: 13px; padding: 24px; }
+
+/*################################################################
+  ######  TrackStar: rustige laag (UX-plan 30-09-2026)  ##########
+  Eén accent (oranje = speelt / hoofdactie), rood alleen voor REC,
+  de rest grijs en wit. Hotcues, cue-markers en stemnamen worden in
+  de fork wit gezet ([TrackStar],mono_colors, C++) — hier de rest.
+##################################################################*/
+
+/* ---- Bovenbalk: suite-schakelaar en segmented controls, als .suite / .segmented in de kit ---- */
+#SuiteNav, #SegmentedGroup {
+  background-color: #10131C;
+  border: 1px solid #242B3B;
+  border-radius: 8px;
+  padding: 1px;
+}
+#SuiteButton, #SegmentButton[displayValue="0"] {
+  background-color: transparent;
+  border: none;
+  border-radius: 6px;
+  color: #9AA3B7;
+  font-size: 12px;
+  font-weight: bold;
+  }
+  #SuiteButton:hover, #SegmentButton[displayValue="0"]:hover {
+    background-color: #1B2130;
+    color: #F3F5F9;
+  }
+#SuiteActive, #SegmentButton[displayValue="1"] {
+  background-color: #1B2130;
+  border: none;
+  border-radius: 6px;
+  color: #F3F5F9;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+/* Take over: rustig zolang de Bot draait, accent zodra jij draait (dan is "Back to Bot" de actie) */
+#TakeOverButton[displayValue="0"] {
+  background-color: #1B2130;
+  border: 1px solid #2F384B;
+  border-radius: 8px;
+  color: #F3F5F9;
+  font-size: 12px;
+  font-weight: bold;
+  }
+  #TakeOverButton[displayValue="0"]:hover { border: 1px solid #3B465C; }
+#TakeOverButton[displayValue="1"] {
+  background-color: #FF6A3D;
+  border: 1px solid #FF6A3D;
+  border-radius: 8px;
+  color: #1A1210;
+  font-size: 12px;
+  font-weight: bold;
+  }
+  #TakeOverButton[displayValue="1"]:hover { background-color: #FF7A52; border: 1px solid #FF7A52; }
+
+#MenuButton {
+  background-color: transparent;
+  border: 1px solid #2F384B;
+  border-radius: 8px;
+  color: #F3F5F9;
+  font-size: 15px;
+  }
+  #MenuButton:hover { background-color: #1B2130; border: 1px solid #3B465C; }
+
+/* ---- Decks: BPM en toonsoort wit i.p.v. oranje/geel ---- */
+WNumber#BpmHuge { color: #F3F5F9; }
+WKey, WKey#KeyHuge { color: #F3F5F9; }   /* kale WKey: Qt 6.9-bug, zie "Key-weergave fix" */
+
+/* CUE actief: wit vlak (zelfde taal als een gezette hotcue), niet geel */
+#SpinnyCueButton[displayValue="1"], #CueButton[displayValue="1"] {
+  background-color: #F3F5F9;
+  border: 1px solid #F3F5F9;
+  color: #1A1210;
+  }
+  #SpinnyCueButton[displayValue="1"]:hover, #CueButton[displayValue="1"]:hover {
+    background-color: #FFFFFF;
+    border: 1px solid #FFFFFF;
+  }
+
+/* Stems: gedempt = wit vlak i.p.v. rood; naam wit (kleur komt uit C++) */
+WPushButton#StemMuteButton[displayValue="1"] {
+  background-color: #F3F5F9;
+  border: 1px solid #F3F5F9;
+  color: #1A1210;
+}
+#StemLabel { font-size: 14px; }
