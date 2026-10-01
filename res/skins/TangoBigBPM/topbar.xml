@@ -1,7 +1,7 @@
 <!--
 Description:
   TrackStar DJ Mixer top bar — the same structure as the other suite apps:
-    [logo] [Ready | Sets | Mixer]  ··· Bot status ···  [Bot | Library] [Take over]  REC  clock  [☰]
+    [logo] [Ready | Mixer]   (Sets lives inside Ready since 2.5)  ··· Bot status ···  [Bot | Library] [Take over]  REC  clock  [☰]
   Everything used less often (waveforms, FX, samplers, mic/aux, mixer, loop & jump, 4 decks,
   main/headphone mixer) lives in the skin settings drawer behind ☰ (skin_settings.xml, "View").
   The main/headphone mixer still appears here when switched on in the drawer.
@@ -59,16 +59,6 @@ Description:
                     <State><Number>0</Number><Text>Ready</Text><Alignment>center</Alignment></State>
                     <Connection>
                       <ConfigKey>[TrackStar],open_ready</ConfigKey>
-                      <ButtonState>LeftButton</ButtonState>
-                    </Connection>
-                  </PushButton>
-                  <PushButton>
-                    <ObjectName>SuiteButton</ObjectName>
-                    <Size>50f,22f</Size>
-                    <NumberStates>1</NumberStates>
-                    <State><Number>0</Number><Text>Sets</Text><Alignment>center</Alignment></State>
-                    <Connection>
-                      <ConfigKey>[TrackStar],open_sets</ConfigKey>
                       <ButtonState>LeftButton</ButtonState>
                     </Connection>
                   </PushButton>
