@@ -1,0 +1,55 @@
+<!--
+Description:
+  Hotcue-knoppen voor de verticale deck-kolom: 2 rijen van 4 (= 8 hotcues).
+  De knoppen rekken mee met de breedte van de kolom.
+Variables:
+  group : [ChannelN]
+-->
+<Template>
+  <WidgetGroup>
+    <ObjectName>HotcueGrid</ObjectName>
+    <Layout>vertical</Layout>
+    <SizePolicy>me,min</SizePolicy>
+    <Children>
+
+      <WidgetGroup><!-- Rij 1: hotcues 1-4 -->
+        <ObjectName>Spacer0f</ObjectName>
+        <Layout>horizontal</Layout>
+        <SizePolicy>me,f</SizePolicy>
+        <Size>1me,30f</Size>
+        <Children>
+          <Template src="skin:/controls/button_hotcue_deck.xml"><SetVariable name="HotCue">1</SetVariable></Template>
+          <WidgetGroup><Size>8f,1min</Size></WidgetGroup>
+          <Template src="skin:/controls/button_hotcue_deck.xml"><SetVariable name="HotCue">2</SetVariable></Template>
+          <WidgetGroup><Size>8f,1min</Size></WidgetGroup>
+          <Template src="skin:/controls/button_hotcue_deck.xml"><SetVariable name="HotCue">3</SetVariable></Template>
+          <WidgetGroup><Size>8f,1min</Size></WidgetGroup>
+          <Template src="skin:/controls/button_hotcue_deck.xml"><SetVariable name="HotCue">4</SetVariable></Template>
+        </Children>
+      </WidgetGroup>
+
+      <WidgetGroup><Size>1min,8f</Size></WidgetGroup>
+
+      <WidgetGroup><!-- Rij 2: hotcues 5-8 -->
+        <ObjectName>Spacer0f</ObjectName>
+        <Layout>horizontal</Layout>
+        <SizePolicy>me,f</SizePolicy>
+        <Size>1me,30f</Size>
+        <Children>
+          <Template src="skin:/controls/button_hotcue_deck.xml"><SetVariable name="HotCue">5</SetVariable></Template>
+          <WidgetGroup><Size>8f,1min</Size></WidgetGroup>
+          <Template src="skin:/controls/button_hotcue_deck.xml"><SetVariable name="HotCue">6</SetVariable></Template>
+          <WidgetGroup><Size>8f,1min</Size></WidgetGroup>
+          <Template src="skin:/controls/button_hotcue_deck.xml"><SetVariable name="HotCue">7</SetVariable></Template>
+          <WidgetGroup><Size>8f,1min</Size></WidgetGroup>
+          <Template src="skin:/controls/button_hotcue_deck.xml"><SetVariable name="HotCue">8</SetVariable></Template>
+        </Children>
+      </WidgetGroup>
+
+    </Children>
+    <Connection>
+      <ConfigKey persist="true">[Tango],hotcues</ConfigKey>
+      <BindProperty>visible</BindProperty>
+    </Connection>
+  </WidgetGroup>
+</Template>

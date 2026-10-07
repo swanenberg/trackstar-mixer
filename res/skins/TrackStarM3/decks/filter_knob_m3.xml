@@ -1,0 +1,36 @@
+<!--
+  Filterknop (QuickEffect super) van deck <chanNum> in de crossfader-balk (Brecht 07-10).
+Variables: chanNum
+-->
+<Template>
+  <WidgetGroup>
+    <ObjectName>FilterKnobBox</ObjectName>
+    <Layout>vertical</Layout>
+    <SizePolicy>min,min</SizePolicy>
+    <MinimumSize>60,64</MinimumSize>
+    <MaximumSize>60,64</MaximumSize>
+    <Children>
+      <Label><ObjectName>FxKicker</ObjectName><Text>FILTER</Text><Size>60f,12f</Size></Label>
+      <WidgetGroup>
+        <Layout>horizontal</Layout>
+        <SizePolicy>min,min</SizePolicy>
+        <Children>
+          <WidgetGroup><Size>1me,1min</Size></WidgetGroup>
+          <KnobComposed>
+            <TooltipId>QuickEffectRack_super1</TooltipId>
+            <Size>32f,32f</Size>
+            <Knob>skin:/knobs_sliders/knob_white.svg</Knob>
+            <BackPath>skin:/knobs_sliders/knob_bg.svg</BackPath>
+            <MinAngle>-130</MinAngle>
+            <MaxAngle>130</MaxAngle>
+            <Connection>
+              <ConfigKey>[QuickEffectRack1_[Channel<Variable name="chanNum"/>]],super1</ConfigKey>
+            </Connection>
+          </KnobComposed>
+          <WidgetGroup><Size>1me,1min</Size></WidgetGroup>
+        </Children>
+      </WidgetGroup>
+      <WidgetGroup><Size>1min,18f</Size></WidgetGroup>
+    </Children>
+  </WidgetGroup>
+</Template>

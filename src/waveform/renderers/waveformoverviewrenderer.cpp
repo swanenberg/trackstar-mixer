@@ -439,7 +439,23 @@ void drawWaveformPartEnergy(
     const QColor middle = signalColors.getMidColor(); // bass + mid
     const QColor core = signalColors.getHighColor();  // bass
 
-    if (mono) {
+    // TrackStar 2.6: [TrackStar],energy_bottom (default 1) = bars from the bottom edge of the
+    // overview (the design's bar chart), whatever the stereo/mono preference says. The caller crops
+    // the image to +-(peak+1) around the centre, so the bottom edge is y = +scale.
+    if (!mono && trackstar::tuning(QStringLiteral("energy_bottom"), 1.0) > 0.0) {
+        const int bottom = static_cast<int>(scale);
+        for (int x = 0; x < n; ++x) {
+            const int hAll = static_cast<int>(2 * shape(eAll[x]));
+            const int hMid = std::min(static_cast<int>(2 * shape(eMid[x])), hAll);
+            const int hLow = std::min(static_cast<int>(2 * shape(eLow[x])), hMid);
+            pPainter->setPen(outer);
+            pPainter->drawLine(QPoint(x, bottom), QPoint(x, bottom - hAll));
+            pPainter->setPen(middle);
+            pPainter->drawLine(QPoint(x, bottom), QPoint(x, bottom - hMid));
+            pPainter->setPen(core);
+            pPainter->drawLine(QPoint(x, bottom), QPoint(x, bottom - hLow));
+        }
+    } else if (mono) {
         const qreal dy = pPainter->deviceTransform().dy();
         pPainter->resetTransform();
         pPainter->translate(0, 2 * dy);

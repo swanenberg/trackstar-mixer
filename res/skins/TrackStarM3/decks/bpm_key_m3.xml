@@ -1,0 +1,31 @@
+<!--
+  Key-chip (klik = key sync, rechts = reset), gecentreerd onder de spinny. De BPM staat onder de tempofader.
+Variables: chanNum, group
+-->
+<Template>
+  <WidgetGroup>
+    <ObjectName>BpmHugeSync</ObjectName>
+    <Layout>stacked</Layout>
+    <SizePolicy>min,min</SizePolicy>
+    <Children>
+      <Template src="skin:/controls/button_2state_right.xml">
+        <SetVariable name="TooltipId">sync_reset_key</SetVariable>
+        <SetVariable name="ObjectName">KeySyncClick</SetVariable>
+        <SetVariable name="Size">56f,30min</SetVariable>
+        <SetVariable name="ConfigKey"><Variable name="group"/>,sync_key</SetVariable>
+        <SetVariable name="ConfigKeyRight"><Variable name="group"/>,reset_key</SetVariable>
+      </Template>
+      <Key>
+        <ObjectName>KeyHuge</ObjectName>
+        <TooltipId>visual_key</TooltipId>
+        <Group><Variable name="group"/></Group>
+        <Size>56f,30f</Size>
+        <Alignment>center</Alignment>
+        <Elide>right</Elide>
+        <Connection>
+          <ConfigKey><Variable name="group"/>,key</ConfigKey>
+        </Connection>
+      </Key>
+    </Children>
+  </WidgetGroup>
+</Template>

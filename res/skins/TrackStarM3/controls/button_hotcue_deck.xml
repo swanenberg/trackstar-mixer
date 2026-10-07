@@ -1,0 +1,138 @@
+<!--
+Description:
+  Slimme HotCue-knop (Brecht): zelfde loop/cue-splitsing als de FLX4-hardware.
+  - Visuele basis = standaard <HotcueButton> (kleuren, loop-icoon, set-op-leeg, rechtsklik=wissen).
+  - Transparante klik-overlays eroverheen kiezen per hotcue-type de juiste actie:
+      type 1 (gewone cue) -> hotcue_X_gotoandplay  (spring + speel)
+      type 4 (opgeslagen loop) -> hotcue_X_gotoandloop (spring + speel + loop)
+      type 4 + loop ACTIEF (hotcue_X_status == 2) -> reloop_toggle (loop UIT,
+        track speelt gewoon door; tweede klik = loop verlaten i.p.v. terugspringen)
+    Bij een lege pad (type 0) is geen overlay zichtbaar -> de HotcueButton zet 'm.
+    De status==2-overlay is genest: buitenste WidgetGroup zichtbaar op status==2,
+    binnenste knop op type==4 — skin-XML kan geen EN-conditie op één widget, en
+    andersom nesten (type buiten) zou kliks opslokken als de loop níét actief is.
+  Z-ORDER (cruciaal): in een <Layout>stacked</Layout> ligt de EERSTE child BOVENOP
+  (vangt de kliks) en de LAATSTE child ACHTER (achtergrond). Referentie = ingebouwde
+  Tango-skin fx/toggle_selector.xml ("invisible, clickable Overlay" als eerste child,
+  "Colored background" als laatste). Daarom staan de klik-overlays HIER EERST en de
+  visuele <HotcueButton> LAATST; anders ving de HotcueButton alle kliks af en vuurde
+  hij de default hotcue_X_activate (die een opgeslagen loop alleen armt i.p.v. er
+  meteen heen te springen -> "loop pakt pas als de afspeelkop ver genoeg is").
+Variables:
+  group : [ChannelN]
+  HotCue: hotcue number
+-->
+<Template>
+  <WidgetGroup>
+    <ObjectName>HotcueSmart</ObjectName>
+    <Layout>stacked</Layout>
+    <MinimumSize>15,30</MinimumSize>
+    <MaximumSize>400,30</MaximumSize>
+    <SizePolicy>me,f</SizePolicy>
+    <Children>
+
+      <!-- OVERLAY (bovenop): loop van DEZE hotcue is actief -> klik = loop verlaten.
+           status==2 betekent bij een opgeslagen loop: dit is de huidige actieve loop,
+           dus reloop_toggle zet precies die loop uit zonder te springen. -->
+      <WidgetGroup>
+        <ObjectName>HotcueReloopWrap</ObjectName>
+        <Layout>stacked</Layout>
+        <SizePolicy>me,f</SizePolicy>
+        <Children>
+          <PushButton>
+            <ObjectName>HotcueClickOverlay</ObjectName>
+            <SizePolicy>me,f</SizePolicy>
+            <NumberStates>1</NumberStates>
+            <State><Number>0</Number></State>
+            <Connection>
+              <ConfigKey><Variable name="group"/>,reloop_toggle</ConfigKey>
+              <ButtonState>LeftButton</ButtonState>
+            </Connection>
+            <Connection>
+              <ConfigKey><Variable name="group"/>,hotcue_<Variable name="HotCue"/>_clear</ConfigKey>
+              <ButtonState>RightButton</ButtonState>
+            </Connection>
+            <Connection>
+              <ConfigKey><Variable name="group"/>,hotcue_<Variable name="HotCue"/>_type</ConfigKey>
+              <Transform><IsEqual>4</IsEqual></Transform>
+              <BindProperty>visible</BindProperty>
+            </Connection>
+          </PushButton>
+        </Children>
+        <Connection>
+          <ConfigKey><Variable name="group"/>,hotcue_<Variable name="HotCue"/>_status</ConfigKey>
+          <Transform><IsEqual>2</IsEqual></Transform>
+          <BindProperty>visible</BindProperty>
+        </Connection>
+      </WidgetGroup>
+
+      <!-- OVERLAY: gewone cue (type 1) -> spring + speel -->
+      <PushButton>
+        <ObjectName>HotcueClickOverlay</ObjectName>
+        <SizePolicy>me,f</SizePolicy>
+        <NumberStates>1</NumberStates>
+        <State><Number>0</Number></State>
+        <Connection>
+          <ConfigKey><Variable name="group"/>,hotcue_<Variable name="HotCue"/>_gotoandplay</ConfigKey>
+          <ButtonState>LeftButton</ButtonState>
+        </Connection>
+        <Connection>
+          <ConfigKey><Variable name="group"/>,hotcue_<Variable name="HotCue"/>_clear</ConfigKey>
+          <ButtonState>RightButton</ButtonState>
+        </Connection>
+        <Connection>
+          <ConfigKey><Variable name="group"/>,hotcue_<Variable name="HotCue"/>_type</ConfigKey>
+          <Transform><IsEqual>1</IsEqual></Transform>
+          <BindProperty>visible</BindProperty>
+        </Connection>
+      </PushButton>
+
+      <!-- OVERLAY: opgeslagen loop (type 4) -> spring + speel + loop -->
+      <PushButton>
+        <ObjectName>HotcueClickOverlay</ObjectName>
+        <SizePolicy>me,f</SizePolicy>
+        <NumberStates>1</NumberStates>
+        <State><Number>0</Number></State>
+        <Connection>
+          <ConfigKey><Variable name="group"/>,hotcue_<Variable name="HotCue"/>_gotoandloop</ConfigKey>
+          <ButtonState>LeftButton</ButtonState>
+        </Connection>
+        <Connection>
+          <ConfigKey><Variable name="group"/>,hotcue_<Variable name="HotCue"/>_clear</ConfigKey>
+          <ButtonState>RightButton</ButtonState>
+        </Connection>
+        <Connection>
+          <ConfigKey><Variable name="group"/>,hotcue_<Variable name="HotCue"/>_type</ConfigKey>
+          <Transform><IsEqual>4</IsEqual></Transform>
+          <BindProperty>visible</BindProperty>
+        </Connection>
+      </PushButton>
+
+      <!-- VISUELE BASIS (laatste child = achtergrond; overlays hierboven vangen de kliks) -->
+      <HotcueButton>
+        <TooltipId>hotcue</TooltipId>
+        <ObjectName>HotcueButton</ObjectName>
+        <SizePolicy>me,f</SizePolicy>
+        <Group><Variable name="group"/></Group>
+        <Hotcue><Variable name="HotCue"/></Hotcue>
+        <NumberStates>3</NumberStates>
+        <State>
+          <Number>0</Number>
+          <Text><Variable name="HotCue"/></Text>
+          <Alignment>center</Alignment>
+        </State>
+        <State>
+          <Number>1</Number>
+          <Text><Variable name="HotCue"/></Text>
+          <Alignment>center</Alignment>
+        </State>
+        <State>
+          <Number>2</Number>
+          <Text><Variable name="HotCue"/></Text>
+          <Alignment>center</Alignment>
+        </State>
+      </HotcueButton>
+
+    </Children>
+  </WidgetGroup>
+</Template>

@@ -1,0 +1,24 @@
+<!--
+  Stems (TrackStarM3): één rij van vier chips (ontwerp artboard 6); klik = mute. Alleen bij een stem-track.
+Variables: chanNum
+-->
+<Template>
+  <WidgetGroup>
+    <ObjectName>StemControls</ObjectName>
+    <Layout>horizontal</Layout>
+    <SizePolicy>me,min</SizePolicy>
+    <Children>
+      <Template src="skin:/decks/stem_chip.xml"><SetVariable name="stemNum">1</SetVariable></Template>
+      <WidgetGroup><Size>6f,1min</Size></WidgetGroup>
+      <Template src="skin:/decks/stem_chip.xml"><SetVariable name="stemNum">2</SetVariable></Template>
+      <WidgetGroup><Size>6f,1min</Size></WidgetGroup>
+      <Template src="skin:/decks/stem_chip.xml"><SetVariable name="stemNum">3</SetVariable></Template>
+      <WidgetGroup><Size>6f,1min</Size></WidgetGroup>
+      <Template src="skin:/decks/stem_chip.xml"><SetVariable name="stemNum">4</SetVariable></Template>
+    </Children>
+    <Connection>
+      <ConfigKey>[Channel<Variable name="chanNum"/>],stem_count</ConfigKey>
+      <BindProperty>visible</BindProperty>
+    </Connection>
+  </WidgetGroup>
+</Template>

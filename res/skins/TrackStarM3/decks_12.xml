@@ -1,0 +1,30 @@
+<!--
+Description:
+  Decks 1 & 2 gestapeld (verticaal), spinny links (deck_right layout).
+-->
+<Template>
+  <SetVariable name="SignalColor"><Variable name="SignalColor_12"/></SetVariable>
+  <SetVariable name="SignalBgColor"><Variable name="SignalBgColor_12"/></SetVariable>
+  <SetVariable name="SpinnyCoverColor"><Variable name="SpinnyCoverColor_12"/></SetVariable>
+
+  <WidgetGroup>
+    <ObjectName>DecksRow</ObjectName>
+    <Layout>vertical</Layout>
+    <SizePolicy>me,me</SizePolicy>
+    <Children>
+      <WidgetGroup><Size>1min,8f</Size></WidgetGroup>
+
+      <Template src="skin:/decks/deck_right.xml">
+        <SetVariable name="chanNum">1</SetVariable>
+      </Template>
+
+      <WidgetGroup><Size>1min,14f</Size></WidgetGroup>
+
+      <Template src="skin:/decks/deck_right.xml">
+        <SetVariable name="chanNum">2</SetVariable>
+      </Template>
+
+      <WidgetGroup><Size>1min,8f</Size></WidgetGroup>
+    </Children>
+  </WidgetGroup>
+</Template>

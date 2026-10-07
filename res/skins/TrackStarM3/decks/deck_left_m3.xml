@@ -1,0 +1,224 @@
+<!--
+  TrackStarM3-deckkaart (gegenereerd door mixer/make_m3_skin.py). Verticaal:
+    titel/artiest/tijd · spinny 180 + Play/CUE-kolom aan de BUITENKANT · BPM/key + filterknop (zelfde
+    kolommen) · overview · 8 hotcues · stems · VU.  side = left  (right: knoppen rechts; left: links)
+Variables:
+  chanNum : [ChannelN]
+-->
+<Template>
+  <SetVariable name="group">[Channel<Variable name="chanNum"/>]</SetVariable>
+  <SetVariable name="OvLow">#DDBCE0</SetVariable>
+  <SetVariable name="OvMid">#B892C0</SetVariable>
+  <SetVariable name="OvHigh">#9A6AA4</SetVariable>
+
+  <SingletonDefinition>
+    <ObjectName>DeckOverviewRow<Variable name="chanNum"/></ObjectName>
+    <Children>
+      <Template src="skin:/decks/row_overview_right.xml"/>
+    </Children>
+  </SingletonDefinition>
+
+  <SingletonDefinition>
+    <ObjectName>DeckTextRow<Variable name="chanNum"/></ObjectName>
+    <Children>
+      <WidgetGroup>
+        <Layout>horizontal</Layout>
+        <Children>
+          <Template src="skin:/decks/loop_indicator.xml"/>
+          <Template src="skin:/decks/row_text_left.xml"/>
+        </Children>
+      </WidgetGroup>
+    </Children>
+  </SingletonDefinition>
+
+  <WidgetGroup>
+    <ObjectName>DeckColumn<Variable name="chanNum"/></ObjectName>
+    <Layout>vertical</Layout>
+    <SizePolicy>me,me</SizePolicy>
+    <Children>
+
+      <!-- 1. titel / artiest / tijd bovenaan -->
+      <WidgetGroup>
+        <Layout>vertical</Layout>
+        <SizePolicy>me,min</SizePolicy>
+        <Children>
+          <SingletonContainer>
+            <ObjectName>DeckTextRow<Variable name="chanNum"/></ObjectName>
+          </SingletonContainer>
+        </Children>
+      </WidgetGroup>
+      <WidgetGroup><Size>1min,6f</Size></WidgetGroup>
+
+      <!-- 2+3. tempofader (buitenkant, verticaal) | spinny + Play/CUE, daaronder BPM/key + filter -->
+      <WidgetGroup>
+        <Layout>horizontal</Layout>
+        <SizePolicy>me,min</SizePolicy>
+        <Children>
+          <WidgetGroup><Size>1me,1min</Size></WidgetGroup>
+          <WidgetGroup><!-- spinny + Play/CUE, daaronder BPM/key + filter -->
+            <Layout>vertical</Layout>
+            <SizePolicy>min,min</SizePolicy>
+            <Children>
+              <WidgetGroup>
+                <Layout>horizontal</Layout>
+                <SizePolicy>min,min</SizePolicy>
+                <Children>
+          <WidgetGroup><!-- Play boven CUE, 64 px -->
+            <Layout>vertical</Layout>
+            <SizePolicy>min,min</SizePolicy>
+            <MinimumSize>60,170</MinimumSize>
+            <Children>
+              <WidgetGroup><Size>1min,1me</Size></WidgetGroup>
+              <Template src="skin:/controls/button_2state_right_display.xml">
+                <SetVariable name="ObjectName">SpinnyPlayButton</SetVariable>
+                <SetVariable name="TooltipId">play_cue_set</SetVariable>
+                <SetVariable name="Size">60f,60f</SetVariable>
+                <SetVariable name="state_0_icon">play_deck.svg</SetVariable>
+                <SetVariable name="state_1_icon">pause_deck.svg</SetVariable>
+                <SetVariable name="ConfigKey"><Variable name="group"/>,play</SetVariable>
+                <SetVariable name="ConfigKeyRight"><Variable name="group"/>,cue_set</SetVariable>
+                <SetVariable name="ConfigKeyDisp"><Variable name="group"/>,play_latched</SetVariable>
+              </Template>
+              <WidgetGroup><Size>1min,8f</Size></WidgetGroup>
+              <Template src="skin:/controls/button_2state_right_display.xml">
+                <SetVariable name="TooltipId">cue_default_cue_gotoandstop</SetVariable>
+                <SetVariable name="ObjectName">SpinnyCueButton</SetVariable>
+                <SetVariable name="Size">60f,60f</SetVariable>
+                <SetVariable name="state_0_text">CUE</SetVariable>
+                <SetVariable name="state_1_text">CUE</SetVariable>
+                <SetVariable name="ConfigKey"><Variable name="group"/>,cue_default</SetVariable>
+                <SetVariable name="ConfigKeyRight"><Variable name="group"/>,cue_gotoandstop</SetVariable>
+                <SetVariable name="ConfigKeyDisp"><Variable name="group"/>,cue_indicator</SetVariable>
+              </Template>
+              <WidgetGroup><Size>1min,1me</Size></WidgetGroup>
+            </Children>
+          </WidgetGroup>
+          <WidgetGroup><Size>14f,1min</Size></WidgetGroup>
+          <WidgetGroup>
+            <ObjectName>SpinnyWell</ObjectName>
+            <SizePolicy>min,min</SizePolicy>
+            <MinimumSize>170,170</MinimumSize>
+            <Layout>vertical</Layout>
+            <Children>
+              <Template src="skin:/decks/spinny_m3.xml">
+                <SetVariable name="chanNum"><Variable name="chanNum"/></SetVariable>
+              </Template>
+            </Children>
+          </WidgetGroup>
+                </Children>
+              </WidgetGroup>
+            </Children>
+          </WidgetGroup>
+          <WidgetGroup><Size>14f,1min</Size></WidgetGroup>
+          <WidgetGroup><!-- verticale tempofader (Brecht 06-10): aan de buitenkant, over spinny + BPM-rij; rate-% eronder -->
+            <ObjectName>TempoColumn</ObjectName>
+            <Layout>vertical</Layout>
+            <SizePolicy>min,min</SizePolicy>
+            <MinimumSize>76,160</MinimumSize>
+            <MaximumSize>76,160</MaximumSize>
+            <Children>
+              <WidgetGroup>
+                <Layout>horizontal</Layout>
+                <SizePolicy>min,min</SizePolicy>
+                <Children>
+                  <WidgetGroup><Size>1me,1min</Size></WidgetGroup>
+              <SliderComposed>
+                <ObjectName>TempoSliderV</ObjectName>
+                <TooltipId>rate</TooltipId>
+                <Size>30f,126f</Size>
+                <Handle scalemode="STRETCH_ASPECT">skin:/knobs_sliders/tempo_handle_m3.svg</Handle>
+                <Slider scalemode="STRETCH">skin:/knobs_sliders/tempo_scale_m3.svg</Slider>
+                <Horizontal>false</Horizontal>
+                <Connection>
+                  <ConfigKey><Variable name="group"/>,rate</ConfigKey>
+                </Connection>
+              </SliderComposed>
+                  <WidgetGroup><Size>1me,1min</Size></WidgetGroup>
+                </Children>
+              </WidgetGroup>
+              <WidgetGroup><!-- BPM direct onder de tempofader (Brecht 07-10) -->
+                <Layout>stacked</Layout>
+                <SizePolicy>min,min</SizePolicy>
+                <Children>
+                  <Template src="skin:/controls/button_2state_right.xml">
+                    <SetVariable name="TooltipId">sync_enabled</SetVariable>
+                    <SetVariable name="ObjectName">BpmSyncClick</SetVariable>
+                    <SetVariable name="Size">76f,34min</SetVariable>
+                    <SetVariable name="ConfigKey"><Variable name="group"/>,sync_enabled</SetVariable>
+                    <SetVariable name="ConfigKeyRight"><Variable name="group"/>,beatsync_tempo</SetVariable>
+                  </Template>
+                  <Number>
+                    <ObjectName>BpmHuge</ObjectName>
+                    <Size>76f,34f</Size>
+                    <TooltipId>visual_bpm</TooltipId>
+                    <Channel><Variable name="chanNum"/></Channel>
+                    <NumberOfDigits>1</NumberOfDigits>
+                    <Alignment>center</Alignment>
+                    <Connection>
+                      <ConfigKey><Variable name="group"/>,visual_bpm</ConfigKey>
+                    </Connection>
+                  </Number>
+                </Children>
+              </WidgetGroup>
+            </Children>
+          </WidgetGroup>
+          <WidgetGroup><Size>1me,1min</Size></WidgetGroup>
+        </Children>
+      </WidgetGroup>
+      <WidgetGroup><Size>1min,6f</Size></WidgetGroup>
+
+      <!-- 4. overview (energiecurve in de fork) -->
+      <WidgetGroup>
+        <Layout>horizontal</Layout>
+        <Size>1me,56f</Size>
+        <Children>
+          <SingletonContainer>
+            <ObjectName>DeckOverviewRow<Variable name="chanNum"/></ObjectName>
+          </SingletonContainer>
+        </Children>
+      </WidgetGroup>
+      <WidgetGroup><Size>1min,6f</Size></WidgetGroup>
+
+
+      <!-- 5. hotcues 2 × 4 -->
+      <Template src="skin:/decks/hotcues_deck_column.xml"/>
+      <WidgetGroup><Size>1min,6f</Size></WidgetGroup>
+
+      <!-- 6. stems -->
+      <Template src="skin:/decks/stem_strip.xml">
+        <SetVariable name="chanNum"><Variable name="chanNum"/></SetVariable>
+      </Template>
+      <WidgetGroup><Size>1min,8f</Size></WidgetGroup>
+
+      <WidgetGroup><Size>1min,1me</Size></WidgetGroup>
+
+      <!-- 7. VU helemaal onderaan, in de deckkleur (Brecht 07-10) -->
+      <WidgetGroup>
+        <ObjectName>VuMeterClippingBorder</ObjectName>
+        <Layout>horizontal</Layout>
+        <SizePolicy>me,min</SizePolicy>
+        <Children>
+          <VuMeter>
+            <Size>1me,6f</Size>
+            <MinimumSize>60,6</MinimumSize>
+            <MaximumSize>10000,6</MaximumSize>
+            <PathVu scalemode="STRETCH">skin:/graphics/vu_b.svg</PathVu>
+            <PathBack scalemode="STRETCH">skin:/graphics/vu_bg.svg</PathBack>
+            <Horizontal>true</Horizontal>
+            <PeakHoldSize>4</PeakHoldSize>
+            <PeakHoldTime>800</PeakHoldTime>
+            <PeakFallTime>200</PeakFallTime>
+            <PeakFallStep>5</PeakFallStep>
+            <Connection>
+              <ConfigKey>[Channel<Variable name="chanNum"/>],vu_meter</ConfigKey>
+            </Connection>
+          </VuMeter>
+        </Children>
+        <Connection>
+          <ConfigKey persist="true">[Tango],vumeter</ConfigKey>
+          <BindProperty>visible</BindProperty>
+        </Connection>
+      </WidgetGroup>
+    </Children>
+  </WidgetGroup>
+</Template>

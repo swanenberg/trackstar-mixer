@@ -1,0 +1,62 @@
+<!--
+  FX-draaiknop (TrackStarM3): mix (dry/wet) van EffectUnit<unit>, effectnaam als label (klik = aan/uit).
+Variables: unit
+-->
+<Template>
+  <WidgetGroup>
+    <ObjectName>FxKnobBox</ObjectName>
+    <Layout>vertical</Layout>
+    <SizePolicy>min,min</SizePolicy>
+    <MinimumSize>84,64</MinimumSize>
+    <MaximumSize>84,64</MaximumSize>
+    <Children>
+      <WidgetGroup><!-- effectnaam als chip bóven de knop; klik = aan/uit (gevuld = aan) -->
+        <ObjectName>FxNamePill</ObjectName>
+        <Layout>stacked</Layout>
+        <Size>84f,18f</Size>
+        <Children>
+          <Template src="skin:/controls/button_2state.xml"><!-- eerst = bovenop -->
+            <SetVariable name="TooltipId">EffectSlot_enabled</SetVariable>
+            <SetVariable name="ObjectName">FxKnobToggle</SetVariable>
+            <SetVariable name="Size">84f,18f</SetVariable>
+            <SetVariable name="state_0_text"></SetVariable>
+            <SetVariable name="state_1_text"></SetVariable>
+            <SetVariable name="ConfigKey">[EffectRack1_EffectUnit<Variable name="unit"/>_Effect1],enabled</SetVariable>
+          </Template>
+          <EffectName>
+            <ObjectName>FxKnobName</ObjectName>
+            <Size>84f,18f</Size>
+            <Elide>right</Elide>
+            <EffectRack>1</EffectRack>
+            <EffectUnit><Variable name="unit"/></EffectUnit>
+            <Effect>1</Effect>
+          </EffectName>
+        </Children>
+        <Connection>
+          <ConfigKey>[EffectRack1_EffectUnit<Variable name="unit"/>_Effect1],enabled</ConfigKey>
+          <BindProperty>highlight</BindProperty>
+        </Connection>
+      </WidgetGroup>
+      <WidgetGroup><Size>1min,4f</Size></WidgetGroup>
+      <WidgetGroup>
+        <Layout>horizontal</Layout>
+        <SizePolicy>min,min</SizePolicy>
+        <Children>
+          <WidgetGroup><Size>1me,1min</Size></WidgetGroup>
+          <KnobComposed>
+            <TooltipId>EffectUnit_mix</TooltipId>
+            <Size>32f,32f</Size>
+            <Knob>skin:/knobs_sliders/knob_white.svg</Knob>
+            <BackPath>skin:/knobs_sliders/knob_bg.svg</BackPath>
+            <MinAngle>-130</MinAngle>
+            <MaxAngle>130</MaxAngle>
+            <Connection>
+              <ConfigKey>[EffectRack1_EffectUnit<Variable name="unit"/>],mix</ConfigKey>
+            </Connection>
+          </KnobComposed>
+          <WidgetGroup><Size>1me,1min</Size></WidgetGroup>
+        </Children>
+      </WidgetGroup>
+    </Children>
+  </WidgetGroup>
+</Template>

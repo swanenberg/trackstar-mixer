@@ -1,0 +1,107 @@
+<!--
+Description:
+  Container for:
+  * artist/title
+  * play position (elapsed/remaining/both)
+  * track duration
+  * indicator for enabled loop (if loop controls are hidden)
+Variables:
+  group   : [ChannelN]
+  chanNum : channel number
+-->
+<Template>
+  <WidgetGroup>
+    <ObjectName>DeckRowText</ObjectName>
+    <Layout>vertical</Layout>
+    <SizePolicy>i,min</SizePolicy>
+    <Children>
+
+      <WidgetGroup><!-- Title + Time -->
+        <Layout>horizontal</Layout>
+        <SizePolicy>i,min</SizePolicy>
+        <Children>
+
+          <WidgetGroup><Size>3f,1min</Size></WidgetGroup>
+
+          <WidgetGroup><!-- Title over de volle breedte -->
+            <Layout>vertical</Layout>
+            <SizePolicy>i,min</SizePolicy>
+            <Children>
+              <TrackProperty>
+                <TooltipId>track_title</TooltipId>
+                <ObjectName>TrackTitle</ObjectName>
+                <Property>titleInfo</Property>
+                <Alignment>Center</Alignment>
+                <Elide>right</Elide>
+                <Size>1me,24f</Size>
+                <Channel><Variable name="chanNum"/></Channel>
+              </TrackProperty>
+            </Children>
+          </WidgetGroup>
+
+          <WidgetGroup><Size>4f,1min</Size></WidgetGroup>
+        </Children>
+      </WidgetGroup><!-- /Title -->
+
+      <TrackWidgetGroup>
+        <Size>0me,2f</Size>
+        <Group><Variable name="group"/></Group>
+        <TrackColorAlpha>255</TrackColorAlpha>
+      </TrackWidgetGroup>
+
+      <WidgetGroup><!-- by Artist + Duration -->
+        <Layout>horizontal</Layout>
+        <SizePolicy>min,min</SizePolicy>
+        <Children>
+
+          <WidgetGroup><Size>3f,1min</Size></WidgetGroup>
+
+          <Label>
+            <ObjectName>TrackBy</ObjectName>
+            <Size>0f,21f</Size>
+            <Text></Text>
+            <Alignment>left</Alignment>
+          </Label>
+
+          <WidgetGroup><Size>1me,1min</Size></WidgetGroup>
+          <TrackProperty>
+            <TooltipId>track_artist</TooltipId>
+            <ObjectName>TrackArtist</ObjectName>
+            <Elide>right</Elide>
+            <Size>130f,16f</Size>
+            <Alignment>right</Alignment>
+            <Property>artist</Property>
+            <Channel><Variable name="chanNum"/></Channel>
+          </TrackProperty>
+          <Label><ObjectName>TrackDot</ObjectName><Text> · </Text><Size>12f,16f</Size></Label>
+          <NumberPos><!-- resttijd naast de artiest (ontwerp: "Safri Duo · −0:48") -->
+            <ObjectName>PlayPosition</ObjectName>
+            <TooltipId>track_time</TooltipId>
+            <Size>56f,16f</Size>
+            <Alignment>left</Alignment>
+            <Channel><Variable name="chanNum"/></Channel>
+            <Connection>
+              <ConfigKey>[Channel<Variable name="chanNum"/>],playposition</ConfigKey>
+            </Connection>
+          </NumberPos>
+          <Label><ObjectName>TrackDot</ObjectName><Text> · </Text><Size>12f,16f</Size></Label>
+          <Key><!-- toonsoort in de subtitel (Brecht 07-10) -->
+            <ObjectName>TrackKeyText</ObjectName>
+            <TooltipId>visual_key</TooltipId>
+            <Group>[Channel<Variable name="chanNum"/>]</Group>
+            <Size>34f,16f</Size>
+            <Alignment>left</Alignment>
+            <Elide>right</Elide>
+            <Connection>
+              <ConfigKey>[Channel<Variable name="chanNum"/>],key</ConfigKey>
+            </Connection>
+          </Key>
+          <WidgetGroup><Size>1me,1min</Size></WidgetGroup>
+
+          <WidgetGroup><Size>4f,1min</Size></WidgetGroup>
+        </Children>
+      </WidgetGroup><!-- /by Artist + Duration -->
+
+    </Children>
+  </WidgetGroup>
+</Template>

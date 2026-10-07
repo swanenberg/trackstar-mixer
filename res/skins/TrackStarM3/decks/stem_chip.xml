@@ -1,0 +1,39 @@
+<!--
+  Stem-chip (TrackStarM3): de naam van de stem als toggle-chip; klik = mute. Gevuld = aan, omlijnd = gemute.
+  WidgetGroup.highlight ← mute, zodat de qss de chip kan dimmen.
+Variables: chanNum, stemNum
+-->
+<Template>
+  <SetVariable name="stemGroup">[Channel<Variable name="chanNum"/>_Stem<Variable name="stemNum"/>]</SetVariable>
+  <WidgetGroup>
+    <ObjectName>StemChip</ObjectName>
+    <Layout>stacked</Layout>
+    <SizePolicy>me,f</SizePolicy>
+    <Size>1me,30f</Size>
+    <Children>
+      <Template src="skin:/controls/button_2state.xml">
+        <SetVariable name="TooltipId">StemMuteButton</SetVariable>
+        <SetVariable name="ObjectName">StemChipClick</SetVariable>
+        <SetVariable name="Size">1me,30f</SetVariable>
+        <SetVariable name="Align">center</SetVariable>
+        <SetVariable name="state_0_text"></SetVariable>
+        <SetVariable name="state_1_text"></SetVariable>
+        <SetVariable name="ConfigKey"><Variable name="stemGroup"/>,mute</SetVariable>
+      </Template>
+      <StemLabel><!-- stacked: de EERSTE ligt bovenop (zoals BpmSyncClick) → knop eerst, label eronder -->
+        <TooltipId>StemLabel</TooltipId>
+        <ObjectName>StemChipLabel</ObjectName>
+        <Group>[Channel<Variable name="chanNum"/>]</Group>
+        <StemNum><Variable name="stemNum"/></StemNum>
+        <Size>1me,30f</Size>
+        <Alignment>center</Alignment>
+        <Elide>right</Elide>
+        <Text></Text>
+      </StemLabel>
+    </Children>
+    <Connection>
+      <ConfigKey><Variable name="stemGroup"/>,mute</ConfigKey>
+      <BindProperty>highlight</BindProperty>
+    </Connection>
+  </WidgetGroup>
+</Template>

@@ -1,0 +1,44 @@
+<!DOCTYPE template>
+<!--
+Description:
+  Compacte 4-pad sampler-strook voor TrackStarM3.
+  Vier sample-cellen naast elkaar ([Sampler1..4]). Sleep een sample/loop op
+  een cel om 'm te laden; op de FLX4 bedien je ze via PAD-MODE > SAMPLER.
+  Zichtbaar via [Skin],show_samplers (gear-menu of mixxx.cfg).
+-->
+<Template>
+  <WidgetGroup>
+    <ObjectName>Sampler4Strip</ObjectName>
+    <Layout>horizontal</Layout>
+    <SizePolicy>me,min</SizePolicy>
+    <Children>
+
+      <WidgetGroup><Size>6f,1min</Size></WidgetGroup>
+
+      <Template src="skin:/decks/sampler_cell.xml">
+        <SetVariable name="samNum">1</SetVariable>
+      </Template>
+      <WidgetGroup><Size>8f,1min</Size></WidgetGroup>
+
+      <Template src="skin:/decks/sampler_cell.xml">
+        <SetVariable name="samNum">2</SetVariable>
+      </Template>
+      <WidgetGroup><Size>8f,1min</Size></WidgetGroup>
+
+      <Template src="skin:/decks/sampler_cell.xml">
+        <SetVariable name="samNum">3</SetVariable>
+      </Template>
+      <WidgetGroup><Size>8f,1min</Size></WidgetGroup>
+
+      <Template src="skin:/decks/sampler_cell.xml">
+        <SetVariable name="samNum">4</SetVariable>
+      </Template>
+
+      <WidgetGroup><Size>6f,1min</Size></WidgetGroup>
+    </Children>
+    <Connection>
+      <ConfigKey persist="true">[Skin],show_samplers</ConfigKey>
+      <BindProperty>visible</BindProperty>
+    </Connection>
+  </WidgetGroup>
+</Template>

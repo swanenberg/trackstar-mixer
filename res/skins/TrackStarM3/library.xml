@@ -1,0 +1,95 @@
+<!--
+Description:
+  Library: Menu-knop + zoekbalk, uitklapbare bronnenlijst boven de tracklist.
+-->
+<Template>
+  <WidgetGroup>
+    <SizePolicy>me,i</SizePolicy>
+    <Layout>vertical</Layout>
+    <Children>
+      <WidgetGroup>
+        <ObjectName>LibraryContainer</ObjectName>
+        <SizePolicy>me,me</SizePolicy>
+        <Layout>vertical</Layout>
+        <Children>
+
+          <!-- Topbalk: Menu-knop + zoekbalk -->
+          <WidgetGroup>
+            <ObjectName>SearchBoxContainer</ObjectName>
+            <Layout>horizontal</Layout>
+            <SizePolicy>me,min</SizePolicy>
+            <Children>
+
+              <PushButton>
+                <ObjectName>SourcesToggle</ObjectName>
+                <Size>80f,24f</Size>
+                <NumberStates>2</NumberStates>
+                <State>
+                  <Number>0</Number>
+                  <Text>&#9776; Menu</Text>
+                </State>
+                <State>
+                  <Number>1</Number>
+                  <Text>&#9776; Menu</Text>
+                </State>
+                <Connection>
+                  <ConfigKey persist="true">[Tango],show_sources</ConfigKey>
+                  <ButtonState>LeftButton</ButtonState>
+                </Connection>
+              </PushButton>
+
+              <PushButton>
+                <ObjectName>SourcesToggle</ObjectName>
+                <Size>60f,24f</Size>
+                <NumberStates>2</NumberStates>
+                <State>
+                  <Number>0</Number>
+                  <Text>FX</Text>
+                </State>
+                <State>
+                  <Number>1</Number>
+                  <Text>FX</Text>
+                </State>
+                <Connection>
+                  <ConfigKey persist="true">[Skin],show_4effectunits</ConfigKey>
+                  <ButtonState>LeftButton</ButtonState>
+                </Connection>
+              </PushButton>
+
+              <SearchBox></SearchBox>
+
+            </Children>
+          </WidgetGroup><!-- /Topbalk -->
+
+          <!-- Uitklapbare bronnenlijst boven de tracklist (zelfde breedte) -->
+          <WidgetGroup>
+            <Layout>vertical</Layout>
+            <Size>1me,200f</Size>
+            <Children>
+              <LibrarySidebar></LibrarySidebar>
+            </Children>
+            <Connection>
+              <ConfigKey persist="true">[Tango],show_sources</ConfigKey>
+              <BindProperty>visible</BindProperty>
+            </Connection>
+          </WidgetGroup>
+
+          <!-- Tracklist -->
+          <WidgetGroup>
+            <Layout>vertical</Layout>
+            <SizePolicy>me,me</SizePolicy>
+            <Children>
+              <Library>
+                <BgColor>#585858</BgColor>
+                <FgColor>#EBC274</FgColor>
+                <ShowButtonText>false</ShowButtonText>
+                <TrackTableBackgroundColorOpacity>0.2</TrackTableBackgroundColorOpacity>
+              </Library>
+            </Children>
+          </WidgetGroup>
+
+        </Children>
+      </WidgetGroup>
+    </Children>
+  </WidgetGroup>
+</Template>

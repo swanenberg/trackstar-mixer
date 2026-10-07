@@ -219,6 +219,28 @@ bool WaveformRendererStem::preprocessInner() {
     const int numStems = m_stackOrder.size();
     const double playMarkerFrame = firstVisualFrame +
             (lastVisualFrame - firstVisualFrame) * m_waveformRenderer->getPlayMarkerPosition();
+    // TrackStar 2.6 palette + dimmed past: [TrackStar],stem_palette (1 = vocals white, drums deck
+    // colour, bass darker, other grey), [TrackStar],stem_past_alpha (0..1, opacity of what has
+    // already played; 1 = no dimming). Deck 2/4 = purple, deck 1/3 = blue.
+    const QString group = m_waveformRenderer->getGroup();
+    const int deckIdx = (group.contains(QStringLiteral("[Channel2]")) ||
+                                group.contains(QStringLiteral("[Channel4]")))
+            ? 1
+            : 0;
+    const float pastAlpha = static_cast<float>(
+            std::clamp(trackstar::tuning(QStringLiteral("stem_past_alpha"), 0.45), 0.0, 1.0));
+    const bool paletteOn = trackstar::tuning(QStringLiteral("stem_palette"), 1.0) > 0.0;
+    // [TrackStar],stem_bottom (default 1): bars rise from the bottom edge (like the deck overview)
+    // instead of mirroring around the centre; the parallax spread is ignored then.
+    const bool bottomMode = !m_isSlipRenderer && !m_splitStemTracks &&
+            trackstar::tuning(QStringLiteral("stem_bottom"), 1.0) > 0.0;
+    // the design shows filled layers; the Mixxx opacity prefs tend to be low (outline look)
+    const float fillAlpha = paletteOn ? std::max(m_opacity, 0.9f) : m_opacity;
+    const float outlineAlpha = paletteOn ? 1.f : m_outlineOpacity;
+    QVarLengthArray<QColor, mixxx::kMaxSupportedStems> paletteColor(stemInfo.size());
+    for (int i = 0; i < stemInfo.size(); i++) {
+        paletteColor[i] = trackstar::stemColor(stemInfo[i].getLabel(), deckIdx, stemInfo[i].getColor());
+    }
     // per stack position: zoom factor (>1 = stretched) and y offset
     QVarLengthArray<double, mixxx::kMaxSupportedStems> stemZoom(numStems);
     QVarLengthArray<float, mixxx::kMaxSupportedStems> stemYOffset(numStems);
@@ -264,11 +286,13 @@ bool WaveformRendererStem::preprocessInner() {
             // Stem is drawn twice with different opacity level, this allow to
             // see the maximum signal by transparency
             for (int layerIdx = 0; layerIdx < 2; layerIdx++) {
-                QColor stemColor = stemInfo[stemIdx].getColor();
+                const QColor& stemColor = paletteColor[stemIdx];
+                const bool past = !m_isSlipRenderer && xVisualFrame < playMarkerFrame;
                 float color_r = stemColor.redF(),
                       color_g = stemColor.greenF(),
                       color_b = stemColor.blueF(),
-                      color_a = stemColor.alphaF() * (layerIdx ? m_opacity : m_outlineOpacity);
+                      color_a = stemColor.alphaF() * (layerIdx ? fillAlpha : outlineAlpha) *
+                        (past ? pastAlpha : 1.f);
 
                 // Cast to float
                 float max = static_cast<float>(u8max) * allGain;
@@ -297,14 +321,29 @@ bool WaveformRendererStem::preprocessInner() {
                 }
                 const int yIndex = m_splitStemTracks ? stemIdx : stemLayer;
                 const float yCenter = yIndex * stemBreadth + halfBreadth + yOffset;
-                vertexUpdater.addRectangle(
-                        {fVisualIdx - halfStripSize,
-                                yCenter - height},
-                        {fVisualIdx + halfStripSize,
-                                m_isSlipRenderer
-                                        ? yCenter
-                                        : yCenter + height},
-                        {color_r, color_g, color_b, color_a});
+                if (bottomMode && deckIdx == 1) {
+                    // deck B (the lower waveform) mirrors deck A: bars hang from the top edge
+                    const float yTop = yIndex * stemBreadth;
+                    vertexUpdater.addRectangle(
+                            {fVisualIdx - halfStripSize, yTop},
+                            {fVisualIdx + halfStripSize, std::min(yTop + 2.f * height, yTop + 2.f * halfBreadth)},
+                            {color_r, color_g, color_b, color_a});
+                } else if (bottomMode) {
+                    const float yBottom = yIndex * stemBreadth + 2.f * halfBreadth;
+                    vertexUpdater.addRectangle(
+                            {fVisualIdx - halfStripSize, std::max(yBottom - 2.f * height, yBottom - 2.f * halfBreadth)},
+                            {fVisualIdx + halfStripSize, yBottom},
+                            {color_r, color_g, color_b, color_a});
+                } else {
+                    vertexUpdater.addRectangle(
+                            {fVisualIdx - halfStripSize,
+                                    yCenter - height},
+                            {fVisualIdx + halfStripSize,
+                                    m_isSlipRenderer
+                                            ? yCenter
+                                            : yCenter + height},
+                            {color_r, color_g, color_b, color_a});
+                }
             }
             stemLayer++;
         }

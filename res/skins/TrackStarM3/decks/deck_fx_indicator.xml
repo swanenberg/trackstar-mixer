@@ -1,0 +1,74 @@
+<!--
+Description:
+  Compacte BEAT-FX indicator voor één deck. Verschijnt ALLEEN bij het deck waar
+  de BEAT FX-unit (EffectUnit1) naartoe geroute is (CH SELECT-paddle op de FLX4),
+  zodat je in één oogopslag ziet welk deck een effect heeft, welk effect het is,
+  en of het aan staat (groen = aan). Klikken op de balk zet het effect aan/uit.
+Variables:
+  chanNum : N  (1, 2, ...)
+-->
+<Template>
+  <SetVariable name="group">[Channel<Variable name="chanNum"/>]</SetVariable>
+
+  <WidgetGroup>
+    <ObjectName>DeckFxBar</ObjectName>
+    <Layout>horizontal</Layout>
+    <SizePolicy>me,f</SizePolicy>
+    <Size>1me,22f</Size>
+    <Children>
+
+      <!-- "FX" tag -->
+      <Label>
+        <ObjectName>DeckFxTag</ObjectName>
+        <Text>FX</Text>
+        <Size>24f,22f</Size>
+      </Label>
+
+      <!-- Naam + ON/OFF-kleur. Stacked: klikbare toggle (voor) -> naam -> kleur-underlay (achter). -->
+      <WidgetGroup>
+        <ObjectName>DeckFxPill</ObjectName>
+        <Layout>stacked</Layout>
+        <SizePolicy>me,f</SizePolicy>
+        <Size>1me,22f</Size>
+        <Children>
+          <!-- onzichtbare klikbare toggle (voorgrond) -->
+          <Template src="skin:/controls/button_2state.xml">
+            <SetVariable name="TooltipId">EffectSlot_enabled</SetVariable>
+            <SetVariable name="ObjectName">DeckFxToggle</SetVariable>
+            <SetVariable name="Size">1me,22f</SetVariable>
+            <SetVariable name="ConfigKey">[EffectRack1_EffectUnit1_Effect1],enabled</SetVariable>
+          </Template>
+
+          <!-- effectnaam -->
+          <WidgetGroup>
+            <ObjectName>DeckFxNameBox</ObjectName>
+            <Size>1me,22f</Size>
+            <Layout>horizontal</Layout>
+            <Children>
+              <EffectName>
+                <ObjectName>DeckFxName</ObjectName>
+                <EffectRack>1</EffectRack>
+                <EffectUnit>1</EffectUnit>
+                <Effect>1</Effect>
+              </EffectName>
+            </Children>
+          </WidgetGroup>
+
+          <!-- gekleurde achtergrond: groen = aan, grijs = uit (achtergrond) -->
+          <Template src="skin:/controls/button_2state.xml">
+            <SetVariable name="ObjectName">DeckFxUnderlay</SetVariable>
+            <SetVariable name="Size">1me,22f</SetVariable>
+            <SetVariable name="ConfigKey">[EffectRack1_EffectUnit1_Effect1],enabled</SetVariable>
+          </Template>
+        </Children>
+      </WidgetGroup>
+
+    </Children>
+
+    <!-- ALLEEN tonen als de BEAT FX naar DIT deck geroute is (CH SELECT-paddle) -->
+    <Connection>
+      <ConfigKey>[EffectRack1_EffectUnit1],group_<Variable name="group"/>_enable</ConfigKey>
+      <BindProperty>visible</BindProperty>
+    </Connection>
+  </WidgetGroup>
+</Template>

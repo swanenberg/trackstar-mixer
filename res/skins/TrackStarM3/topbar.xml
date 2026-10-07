@@ -1,0 +1,276 @@
+<!--
+Description:
+  TrackStar DJ Mixer top bar — the same structure as the other suite apps:
+    [logo] [Ready | Mixer]   (Sets lives inside Ready since 2.5)  ··· Bot status ···  [Bot | Library] [Take over]  REC  clock  [☰]
+  Everything used less often (waveforms, FX, samplers, mic/aux, mixer, loop & jump, 4 decks,
+  main/headphone mixer) lives in the skin settings drawer behind ☰ (skin_settings.xml, "View").
+  The main/headphone mixer still appears here when switched on in the drawer.
+-->
+<Template>
+  <WidgetGroup>
+    <ObjectName>Topbar</ObjectName>
+    <Layout>horizontal</Layout>
+    <SizePolicy>me,min</SizePolicy>
+    <Children>
+      <WidgetGroup>
+        <ObjectName>AlignTop</ObjectName>
+        <Layout>horizontal</Layout>
+        <SizePolicy>me,min</SizePolicy>
+        <Children>
+          <WidgetGroup><!-- Logo + suite switcher + (optional) main/headphone mixer + Bot status -->
+            <ObjectName>MixerBar</ObjectName>
+            <Layout>horizontal</Layout>
+            <Size>-1me,40f</Size>
+            <Children>
+
+              <WidgetGroup><Size>2f,0min</Size></WidgetGroup>
+
+              <WidgetGroup><Size>6f,0min</Size></WidgetGroup>
+
+              <WidgetGroup><Size>10f,0min</Size></WidgetGroup>
+
+              
+
+              <WidgetGroup><Size>10f,0min</Size></WidgetGroup>
+
+              <!-- Main & headphone mixer: only when switched on under ☰ › Mixer -->
+              
+              <WidgetGroup>
+                <SizePolicy>me,min</SizePolicy>
+                <MaximumSize>30,1</MaximumSize>
+              </WidgetGroup>
+              
+
+              <WidgetGroup><Size>300f,1min</Size></WidgetGroup>
+              <WidgetGroup><Size>0me,1min</Size></WidgetGroup>
+              <!-- Middle column: Bot (show_library 0) or Library (1), as a segmented control.
+                   Both halves toggle the same control; the Bot half shows it inverted. -->
+              <WidgetGroup>
+                <ObjectName>SegmentedGroup</ObjectName>
+                <Layout>horizontal</Layout>
+                <Size>-1min,34f</Size>
+                <Children>
+                  <PushButton>
+                    <ObjectName>SegmentButton</ObjectName>
+                    <Size>70f,22f</Size>
+                    <NumberStates>2</NumberStates>
+                    <State><Number>0</Number><Text>Autopilot</Text><Alignment>center</Alignment></State>
+                    <State><Number>1</Number><Text>Autopilot</Text><Alignment>center</Alignment></State>
+                    <Connection>
+                      <ConfigKey persist="true">[TrackStar],show_library</ConfigKey>
+                      <Transform><Not/></Transform>
+                      <ButtonState>LeftButton</ButtonState>
+                    </Connection>
+                  </PushButton>
+                  <PushButton>
+                    <ObjectName>SegmentButton</ObjectName>
+                    <Size>88f,32f</Size>
+                    <NumberStates>2</NumberStates>
+                    <State><Number>0</Number><Text>Library</Text><Alignment>center</Alignment></State>
+                    <State><Number>1</Number><Text>Library</Text><Alignment>center</Alignment></State>
+                    <Connection>
+                      <ConfigKey persist="true">[TrackStar],show_library</ConfigKey>
+                      <ButtonState>LeftButton</ButtonState>
+                    </Connection>
+                  </PushButton>
+                </Children>
+              </WidgetGroup>
+              <Label><!-- bot_status van de bridge: niet meer zichtbaar, het paneel toont het zelf -->
+                <ObjectName>TrackStarBotStatus</ObjectName>
+                <Size>0f,0f</Size>
+                <Text></Text>
+              </Label>
+
+            </Children>
+          </WidgetGroup>
+        </Children>
+      </WidgetGroup>
+
+      <WidgetGroup><!-- Crossfader (only with ☰ › Crossfader in top bar) -->
+        <ObjectName>CrossfaderContainer</ObjectName>
+        <SizePolicy>min,f</SizePolicy>
+        <Layout>vertical</Layout>
+        <Children>
+          <SliderComposed>
+            <TooltipId>crossfader</TooltipId>
+            <Size>108f,28f</Size>
+            <Handle scalemode="STRETCH_ASPECT">skin:/knobs_sliders/crossfader_handle.svg</Handle>
+            <Slider scalemode="STRETCH_ASPECT">skin:/knobs_sliders/crossfader_scale.svg</Slider>
+            <Horizontal>true</Horizontal>
+            <Connection>
+              <ConfigKey>[Master],crossfader</ConfigKey>
+            </Connection>
+          </SliderComposed>
+        </Children>
+        <Connection>
+          <ConfigKey persist="true">[Skin],show_xfader</ConfigKey>
+          <BindProperty>visible</BindProperty>
+        </Connection>
+      </WidgetGroup>
+
+      <WidgetGroup><!-- Bot | Library, Take over, Rec, Clock, ☰ -->
+        <Layout>horizontal</Layout>
+        <ObjectName>SkinControlsBar</ObjectName>
+        <SizePolicy>me,min</SizePolicy>
+        <Children>
+
+          <StatusLight>
+            <TooltipId>autodj_status</TooltipId>
+            <ObjectName>AutoDjStatus</ObjectName>
+            <Size>14f,22f</Size>
+            <NumberPos>3</NumberPos>
+            <PathStatusLight1>skin:/graphics/autodj_status.svg</PathStatusLight1>
+            <PathStatusLight2>skin:/graphics/autodj_status.svg</PathStatusLight2>
+            <PathStatusLight3>skin:/graphics/autodj_status.svg</PathStatusLight3>
+            <Connection>
+              <ConfigKey>[AutoDJ],enabled</ConfigKey>
+            </Connection>
+            <Connection>
+              <ConfigKey>[AutoDJ],enabled</ConfigKey>
+              <BindProperty>visible</BindProperty>
+            </Connection>
+          </StatusLight>
+
+          <WidgetGroup><Size>0me,1min</Size></WidgetGroup>
+
+          <WidgetGroup><!-- hidden with maximized library -->
+            <Layout>horizontal</Layout>
+            <ObjectName>SkinControlsBar</ObjectName>
+            <SizePolicy>min,min</SizePolicy>
+            <Children>
+
+
+
+              <WidgetGroup><Size>8f,1min</Size></WidgetGroup>
+
+              <!-- TrackStar DJ Bot: 0 = the Bot plays, 1 = you took over (press again: the Bot goes on) -->
+              <Template src="skin:/controls/button_2state_persist.xml">
+                <SetVariable name="ObjectName">TakeOverButton</SetVariable>
+                <SetVariable name="Size">96f,22f</SetVariable>
+                <SetVariable name="state_0_text">✋ Take over</SetVariable>
+                <SetVariable name="state_1_text">▶ Back to Bot</SetVariable>
+                <SetVariable name="ConfigKey">[TrackStar],handoff</SetVariable>
+              </Template>
+            </Children>
+            <Connection>
+              <ConfigKey>[Skin],show_maximized_library</ConfigKey>
+              <Transform><Not/></Transform>
+              <BindProperty>visible</BindProperty>
+            </Connection>
+          </WidgetGroup>
+
+          <WidgetGroup><Size>10f,1min</Size></WidgetGroup>
+
+          <WidgetGroup><!-- Recording button & recording duration label -->
+            <ObjectName>RecBox</ObjectName>
+            <Layout>stacked</Layout>
+            <Size>70f,20f</Size>
+            <Children>
+              <Template src="skin:/controls/button_3state_display.xml">
+                <SetVariable name="ObjectName">RecButton</SetVariable>
+                <SetVariable name="TooltipId">toggle_recording</SetVariable>
+                <SetVariable name="Size">70f,20f</SetVariable>
+                <SetVariable name="ConfigKey">[Recording],toggle_recording</SetVariable>
+                <SetVariable name="ConfigKeyDisp">[Recording],status</SetVariable>
+              </Template>
+              <WidgetGroup>
+                <Layout>horizontal</Layout>
+                <Size>70f,20f</Size>
+                <Children>
+                  <Template src="skin:/controls/button_3state_display.xml">
+                    <SetVariable name="ObjectName">RecDot</SetVariable>
+                    <SetVariable name="TooltipId">toggle_recording</SetVariable>
+                    <SetVariable name="Size">15f,16f</SetVariable>
+                    <SetVariable name="state_0_text">&#9679;</SetVariable>
+                    <SetVariable name="state_1_text">&#9679;</SetVariable>
+                    <SetVariable name="state_2_text">&#9679;</SetVariable>
+                    <SetVariable name="Align">right</SetVariable>
+                    <SetVariable name="ConfigKeyDisp">[Recording],status</SetVariable>
+                  </Template>
+                  <RecordingDuration>
+                    <ObjectName>RecDuration</ObjectName>
+                    <Size>55f,20f</Size>
+                    <InactiveText>REC</InactiveText>
+                    <Alignment>center</Alignment>
+                  </RecordingDuration>
+                </Children>
+              </WidgetGroup>
+            </Children>
+          </WidgetGroup>
+
+          <WidgetGroup><Size>7f,1min</Size></WidgetGroup>
+
+          <WidgetGroup><!-- Clock + latency display -->
+            <ObjectName>ClockBox</ObjectName>
+            <MinimumSize>52,28</MinimumSize>
+            <MaximumSize>64,28</MaximumSize>
+            <SizePolicy>max</SizePolicy>
+            <Layout>vertical</Layout>
+            <Children>
+              <WidgetGroup>
+                <SizePolicy>me,me</SizePolicy>
+                <Layout>horizontal</Layout>
+                <Children>
+                  <Time>
+                    <TooltipId>time</TooltipId>
+                    <ObjectName>Clock</ObjectName>
+                    <Align>center</Align>
+                  </Time>
+                </Children>
+              </WidgetGroup>
+              <WidgetGroup>
+                <ObjectName>AlignHCenter</ObjectName>
+                <SizePolicy>me,me</SizePolicy>
+                <Layout>horizontal</Layout>
+                <Children>
+                  <VuMeter><!-- latency usage -->
+                    <Size>31f,3f</Size>
+                    <TooltipId>audio_latency_usage</TooltipId>
+                    <PathVu>skin:/graphics/latency_usage_over.svg</PathVu>
+                    <PathBack>skin:/graphics/latency_usage.svg</PathBack>
+                    <Horizontal>true</Horizontal>
+                    <PeakHoldSize>5</PeakHoldSize>
+                    <PeakHoldTime>1000</PeakHoldTime>
+                    <PeakFallTime>100</PeakFallTime>
+                    <PeakFallStep>1</PeakFallStep>
+                    <Connection>
+                      <ConfigKey>[App],audio_latency_usage</ConfigKey>
+                    </Connection>
+                  </VuMeter>
+                </Children>
+              </WidgetGroup>
+            </Children>
+          </WidgetGroup>
+
+          <WidgetGroup><Size>3f,1min</Size></WidgetGroup>
+
+          <WidgetGroup><!-- ☰ opens the settings drawer (View, Decks, Mixer, …) -->
+            <Layout>vertical</Layout>
+            <SizePolicy>min,min</SizePolicy>
+            <Children>
+              <PushButton>
+                <TooltipId>skin_settings</TooltipId>
+                <ObjectName>MenuButton</ObjectName>
+                <Size>30f,22f</Size>
+                <NumberStates>2</NumberStates>
+                <State><Number>0</Number><Text>⋮</Text><Alignment>center</Alignment></State>
+                <State><Number>1</Number><Text>⋮</Text><Alignment>center</Alignment></State>
+                <Connection>
+                  <ConfigKey>[Skin],show_settings</ConfigKey>
+                  <ButtonState>LeftButton</ButtonState>
+                </Connection>
+              </PushButton>
+            </Children>
+            <Connection>
+              <ConfigKey>[Skin],show_settings</ConfigKey>
+              <Transform><Not/></Transform>
+              <BindProperty>visible</BindProperty>
+            </Connection>
+          </WidgetGroup>
+
+        </Children>
+      </WidgetGroup>
+
+    </Children>
+  </WidgetGroup>
+</Template>

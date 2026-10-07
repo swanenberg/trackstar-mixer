@@ -1,0 +1,73 @@
+<!--
+  Tempo-rij voor TrackStarM3: [-] horizontale rate-slider [+] met rate-%.
+  Altijd zichtbaar (niet gated op [Skin],show_rate_controls: die staat persist op 0
+  en de skin-settings-toggle deed toch nergens iets).
+  * Slider  : [ChannelN],rate — rechtsklik = reset naar 0% (Mixxx-standaard),
+              scrollwiel werkt ook. Richting volgt de voorkeur "richting snelheidsschuif".
+  * [-]/[+] : rate_perm_down/up, rechtsklik = kleine stap (rate_perm_*_small).
+  * %       : WNumberRate, toont afwijking t.o.v. origineel tempo.
+  Slider hergebruikt de stem-volume-SVG's, zelfde patroon als decks/crossfader_bar.xml.
+Variables:
+  chanNum : channel number
+-->
+<Template>
+  <SetVariable name="group">[Channel<Variable name="chanNum"/>]</SetVariable>
+
+  <WidgetGroup>
+    <ObjectName>TempoRow</ObjectName>
+    <Layout>horizontal</Layout>
+    <SizePolicy>me,min</SizePolicy>
+    <Children>
+
+      <Template src="skin:/controls/button_1state_right.xml">
+        <SetVariable name="TooltipId">rate_perm_down_rate_perm_down_small</SetVariable>
+        <SetVariable name="ObjectName">RateDown</SetVariable>
+        <SetVariable name="Size">18f,18f</SetVariable>
+        <SetVariable name="ConfigKey"><Variable name="group"/>,rate_perm_down</SetVariable>
+        <SetVariable name="ConfigKeyRight"><Variable name="group"/>,rate_perm_down_small</SetVariable>
+      </Template>
+
+      <WidgetGroup><Size>4f,1min</Size></WidgetGroup>
+
+      <SliderComposed>
+        <ObjectName>TempoSlider</ObjectName>
+        <TooltipId>rate</TooltipId>
+        <Size>1me,18f</Size>
+        <MinimumSize>80,18</MinimumSize>
+        <Handle scalemode="STRETCH_ASPECT">skin:/knobs_sliders/stem_volume_handle.svg</Handle>
+        <Slider scalemode="STRETCH">skin:/knobs_sliders/stem_volume_scale.svg</Slider>
+        <Horizontal>true</Horizontal>
+        <Connection>
+          <ConfigKey><Variable name="group"/>,rate</ConfigKey>
+        </Connection>
+      </SliderComposed>
+
+      <WidgetGroup><Size>4f,1min</Size></WidgetGroup>
+
+      <Template src="skin:/controls/button_1state_right.xml">
+        <SetVariable name="TooltipId">rate_perm_up_rate_perm_up_small</SetVariable>
+        <SetVariable name="ObjectName">RateUp</SetVariable>
+        <SetVariable name="Size">18f,18f</SetVariable>
+        <SetVariable name="ConfigKey"><Variable name="group"/>,rate_perm_up</SetVariable>
+        <SetVariable name="ConfigKeyRight"><Variable name="group"/>,rate_perm_up_small</SetVariable>
+      </Template>
+
+      <WidgetGroup>
+        <ObjectName>RateDisplayBox</ObjectName>
+        <Layout>horizontal</Layout>
+        <SizePolicy>min,min</SizePolicy>
+        <Children>
+          <NumberRate>
+            <TooltipId>rate_display</TooltipId>
+            <ObjectName>RateText</ObjectName>
+            <Size>46f,18f</Size>
+            <Alignment>center</Alignment>
+            <Channel><Variable name="chanNum"/></Channel>
+            <NumberOfDigits>2</NumberOfDigits>
+          </NumberRate>
+        </Children>
+      </WidgetGroup>
+
+    </Children>
+  </WidgetGroup>
+</Template>

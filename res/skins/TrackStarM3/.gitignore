@@ -1,0 +1,7 @@
+# editing backups
+*.bak
+*.bak2
+*.bak3
+*.bak4
+*.bak-claude*
+.DS_Store

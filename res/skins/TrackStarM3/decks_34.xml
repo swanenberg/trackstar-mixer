@@ -1,0 +1,34 @@
+<!--
+Description:
+  Decks 3 & 4 gestapeld (verticaal), spinny links. Zichtbaar bij show_4decks.
+-->
+<Template>
+  <SetVariable name="SignalColor"><Variable name="SignalColor_34"/></SetVariable>
+  <SetVariable name="SignalBgColor"><Variable name="SignalBgColor_34"/></SetVariable>
+  <SetVariable name="SpinnyCoverColor"><Variable name="SpinnyCoverColor_34"/></SetVariable>
+
+  <WidgetGroup>
+    <ObjectName>DecksRow</ObjectName>
+    <Layout>vertical</Layout>
+    <SizePolicy>me,me</SizePolicy>
+    <Children>
+      <WidgetGroup><Size>1min,14f</Size></WidgetGroup>
+
+      <Template src="skin:/decks/deck_right.xml">
+        <SetVariable name="chanNum">3</SetVariable>
+      </Template>
+
+      <WidgetGroup><Size>1min,14f</Size></WidgetGroup>
+
+      <Template src="skin:/decks/deck_right.xml">
+        <SetVariable name="chanNum">4</SetVariable>
+      </Template>
+
+      <WidgetGroup><Size>1min,8f</Size></WidgetGroup>
+    </Children>
+    <Connection>
+      <ConfigKey persist="true">[Skin],show_4decks</ConfigKey>
+      <BindProperty>visible</BindProperty>
+    </Connection>
+  </WidgetGroup>
+</Template>

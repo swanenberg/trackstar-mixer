@@ -45,4 +45,22 @@ QColor displayColor(const QColor& trackColor) {
     return tuning(QStringLiteral("mono_colors"), 1.0) > 0.0 ? QColor(0xF3, 0xF5, 0xF9) : trackColor;
 }
 
+QColor stemColor(const QString& label, int deckIdx, const QColor& fileColor) {
+    if (tuning(QStringLiteral("stem_palette"), 1.0) <= 0.0) {
+        return fileColor;
+    }
+    const QString l = label.toLower();
+    const bool purple = deckIdx == 1;
+    if (l.contains(QStringLiteral("voc"))) {
+        return QColor(0xFF, 0xFF, 0xFF);
+    }
+    if (l.contains(QStringLiteral("drum"))) {
+        return purple ? QColor(0xDD, 0xBC, 0xE0) : QColor(0xAA, 0xC7, 0xFF);
+    }
+    if (l.contains(QStringLiteral("bass"))) {
+        return purple ? QColor(0x9A, 0x6A, 0xA4) : QColor(0x4F, 0x78, 0xB8);
+    }
+    return QColor(0x5C, 0x62, 0x73);   // other / unknown
+}
+
 } // namespace trackstar

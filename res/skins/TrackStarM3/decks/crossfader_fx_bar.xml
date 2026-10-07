@@ -1,0 +1,36 @@
+<!--
+  Crossfader met links en rechts een FX-draaiknop (TrackStarM3, Brecht 06-10): knop = dry/wet (mix) van
+  BEAT FX-unit 1 (deck A) en 2 (deck B), klik op het label = effect aan/uit, label = effectnaam.
+-->
+<Template>
+  <WidgetGroup>
+    <ObjectName>DeckCrossfaderBar</ObjectName>
+    <Layout>horizontal</Layout>
+    <SizePolicy>me,min</SizePolicy>
+    <Children>
+      <Template src="skin:/decks/filter_knob_m3.xml"><SetVariable name="chanNum">1</SetVariable></Template>
+      <WidgetGroup><Size>6f,1min</Size></WidgetGroup>
+      <Template src="skin:/decks/fx_knob_m3.xml"><SetVariable name="unit">1</SetVariable></Template>
+      <WidgetGroup><Size>1me,1min</Size></WidgetGroup>
+      <Label><ObjectName>XfaderLabelA</ObjectName><Text>A</Text><Size>28f,28f</Size></Label>
+      <WidgetGroup><Size>8f,1min</Size></WidgetGroup>
+      <SliderComposed>
+        <ObjectName>DeckCrossfaderSlider</ObjectName>
+        <TooltipId>crossfader</TooltipId>
+        <Size>220f,22f</Size>
+        <Handle scalemode="STRETCH_ASPECT">skin:/knobs_sliders/stem_volume_handle.svg</Handle>
+        <Slider scalemode="STRETCH">skin:/knobs_sliders/stem_volume_scale.svg</Slider>
+        <Horizontal>true</Horizontal>
+        <Connection>
+          <ConfigKey>[Master],crossfader</ConfigKey>
+        </Connection>
+      </SliderComposed>
+      <WidgetGroup><Size>8f,1min</Size></WidgetGroup>
+      <Label><ObjectName>XfaderLabelB</ObjectName><Text>B</Text><Size>28f,28f</Size></Label>
+      <WidgetGroup><Size>1me,1min</Size></WidgetGroup>
+      <Template src="skin:/decks/fx_knob_m3.xml"><SetVariable name="unit">2</SetVariable></Template>
+      <WidgetGroup><Size>6f,1min</Size></WidgetGroup>
+      <Template src="skin:/decks/filter_knob_m3.xml"><SetVariable name="chanNum">2</SetVariable></Template>
+    </Children>
+  </WidgetGroup>
+</Template>
