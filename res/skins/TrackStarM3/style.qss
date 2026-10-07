@@ -4108,6 +4108,10 @@ WKey { font-size: 13px; font-weight: 400; color: #C4C6D0; border: 0px; backgroun
 #StemChip[highlight="1"] { background-color: transparent; border: 1px solid #44474F; }
 #StemChipLabel { background-color: transparent; color: #DAE2F9; font-size: 12px; font-weight: 500; qproperty-alignment: 'AlignCenter'; }
 #StemChip[highlight="1"] #StemChipLabel { color: #9A9CA6; }
+/* volume door de Autopilot (deels) weggedraaid → gedimde chip; de mute-rand blijft daar los van */
+#StemChipInner { background-color: transparent; }
+#StemChipInner[highlight="0"] { background-color: rgba(17, 19, 24, 0.55); border-radius: 10px; }
+#StemChipInner[highlight="0"] #StemChipLabel { color: #6F7380; }
 #StemChipClick { background-color: transparent; border: 0px; }
 #StemControls { margin: 0px; }
 WPushButton#StemMuteButton { border-radius: 8px; font-size: 12px; font-weight: 500; }

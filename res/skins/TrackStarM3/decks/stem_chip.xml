@@ -20,16 +20,27 @@ Variables: chanNum, stemNum
         <SetVariable name="state_1_text"></SetVariable>
         <SetVariable name="ConfigKey"><Variable name="stemGroup"/>,mute</SetVariable>
       </Template>
-      <StemLabel><!-- stacked: de EERSTE ligt bovenop (zoals BpmSyncClick) → knop eerst, label eronder -->
-        <TooltipId>StemLabel</TooltipId>
-        <ObjectName>StemChipLabel</ObjectName>
-        <Group>[Channel<Variable name="chanNum"/>]</Group>
-        <StemNum><Variable name="stemNum"/></StemNum>
+      <WidgetGroup><!-- label-laag; highlight ← volume: 0 = door de Autopilot weggedraaid (gedimd), 1 = vol -->
+        <ObjectName>StemChipInner</ObjectName>
+        <Layout>vertical</Layout>
         <Size>1me,30f</Size>
-        <Alignment>center</Alignment>
-        <Elide>right</Elide>
-        <Text></Text>
-      </StemLabel>
+        <Children>
+          <StemLabel><!-- stacked: de EERSTE ligt bovenop (zoals BpmSyncClick) → knop eerst, label eronder -->
+            <TooltipId>StemLabel</TooltipId>
+            <ObjectName>StemChipLabel</ObjectName>
+            <Group>[Channel<Variable name="chanNum"/>]</Group>
+            <StemNum><Variable name="stemNum"/></StemNum>
+            <Size>1me,30f</Size>
+            <Alignment>center</Alignment>
+            <Elide>right</Elide>
+            <Text></Text>
+          </StemLabel>
+        </Children>
+        <Connection>
+          <ConfigKey><Variable name="stemGroup"/>,volume</ConfigKey>
+          <BindProperty>highlight</BindProperty>
+        </Connection>
+      </WidgetGroup>
     </Children>
     <Connection>
       <ConfigKey><Variable name="stemGroup"/>,mute</ConfigKey>

@@ -235,8 +235,12 @@ bool WaveformRendererStem::preprocessInner() {
     const bool bottomMode = !m_isSlipRenderer && !m_splitStemTracks &&
             trackstar::tuning(QStringLiteral("stem_bottom"), 1.0) > 0.0;
     // the design shows filled layers; the Mixxx opacity prefs tend to be low (outline look)
-    const float fillAlpha = paletteOn ? std::max(m_opacity, 0.9f) : m_opacity;
-    const float outlineAlpha = paletteOn ? 1.f : m_outlineOpacity;
+    const float fillAlpha = paletteOn ? std::max(m_opacity, 0.95f) : m_opacity;
+    // the outline layer ignores volume/mute (it shows what *could* play): keep it a faint ghost, so a
+    // stem the Autopilot or a pad took out visibly disappears ([TrackStar],stem_ghost_alpha)
+    const float outlineAlpha = paletteOn
+            ? static_cast<float>(std::clamp(trackstar::tuning(QStringLiteral("stem_ghost_alpha"), 0.18), 0.0, 1.0))
+            : m_outlineOpacity;
     QVarLengthArray<QColor, mixxx::kMaxSupportedStems> paletteColor(stemInfo.size());
     for (int i = 0; i < stemInfo.size(); i++) {
         paletteColor[i] = trackstar::stemColor(stemInfo[i].getLabel(), deckIdx, stemInfo[i].getColor());
