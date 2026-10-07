@@ -1,5 +1,7 @@
 #include "waveform/renderers/allshader/waveformrendermark.h"
 
+#include <QDateTime>
+
 #include <QPainterPath>
 
 #include "moc_waveformrendermark.cpp"
@@ -633,6 +635,22 @@ void allshader::WaveformRenderMark::drawTriangle(QPainter* painter,
 }
 
 void allshader::WaveformRenderMark::updateMarkImage(WaveformMarkPointer pMark) {
+    // TrackStar diagnostics: a mark image regenerated every frame stalls the waveform (texture +
+    // mipmaps on the GUI thread). Count per second and warn once a second when it runs wild.
+    {
+        static int s_regen = 0;
+        static qint64 s_since = 0;
+        const qint64 now = QDateTime::currentMSecsSinceEpoch();
+        s_regen++;
+        if (now - s_since >= 1000) {
+            if (s_regen > 20) {
+                qWarning() << "TrackStar: mark images regenerated" << s_regen << "x in 1 s — last:"
+                           << pMark->m_text << "breadth" << pMark->m_breadth << "level" << pMark->m_level;
+            }
+            s_regen = 0;
+            s_since = now;
+        }
+    }
     if (!pMark->m_pGraphics) {
         pMark->m_pGraphics =
                 std::make_unique<WaveformMarkNodeGraphics>(pMark.get(),

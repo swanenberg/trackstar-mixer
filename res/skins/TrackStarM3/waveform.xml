@@ -24,7 +24,7 @@ Variables:
       <Visual>
         <TooltipId>waveform_display</TooltipId>
         <ObjectName>Waveform</ObjectName>
-        <Size>0me,96min</Size>
+        <Size>0me,96f</Size>
         <Channel><Variable name="chanNum"/></Channel>
         <BgColor><Variable name="SignalBgColor"/></BgColor>
         <SignalColor><Variable name="SignalColor"/></SignalColor>
@@ -47,7 +47,7 @@ Variables:
         <Mark>
           <Control>cue_point</Control>
           <Text>Q</Text>
-          <Align><Variable name="MarkV"/>|right</Align>
+          <Align><Variable name="MarkV"/>|left</Align>
           <Color>#FFFFFF</Color>
           <TextColor>#FFFFFF</TextColor>
         </Mark>

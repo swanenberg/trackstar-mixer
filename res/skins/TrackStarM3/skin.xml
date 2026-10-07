@@ -566,7 +566,7 @@
 
                         <WidgetGroup><!-- Onder: waveforms volle breedte; niet gretig, de decks krijgen de restruimte -->
                           <Layout>vertical</Layout>
-                          <SizePolicy>me,max</SizePolicy>
+                          <SizePolicy>me,min</SizePolicy>
                           <MaximumSize>-1,300</MaximumSize>
                           <Children>
                             <Template src="skin:/waveforms_container.xml"/>
