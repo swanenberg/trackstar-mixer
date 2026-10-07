@@ -210,7 +210,7 @@ bool WaveformRendererStem::preprocessInner() {
     //   [TrackStar],stem_parallax_slip   also in the slip overlay (0/1)
     const double parallax = m_splitStemTracks
             ? 0.0
-            : std::clamp(trackstar::tuning(QStringLiteral("stem_parallax"), 0.45), 0.0, 1.0);
+            : std::clamp(trackstar::tuning(QStringLiteral("stem_parallax"), 0.0), 0.0, 1.0);   // 07-10: uit (liep "naast" de playhead)
     const double spread = m_splitStemTracks
             ? 0.0
             : std::clamp(trackstar::tuning(QStringLiteral("stem_parallax_spread"), 0.30), 0.0, 1.0);
@@ -242,8 +242,24 @@ bool WaveformRendererStem::preprocessInner() {
             ? static_cast<float>(std::clamp(trackstar::tuning(QStringLiteral("stem_ghost_alpha"), 0.18), 0.0, 1.0))
             : m_outlineOpacity;
     QVarLengthArray<QColor, mixxx::kMaxSupportedStems> paletteColor(stemInfo.size());
+    // beat and vocals are what you want to see: drums + vocals full, bass/other as a dim backdrop
+    // ([TrackStar],stem_backdrop_alpha), in a fixed stack order other → bass → drums → vocals (front)
+    QVarLengthArray<float, mixxx::kMaxSupportedStems> paletteAlpha(stemInfo.size());
+    QVarLengthArray<int, mixxx::kMaxSupportedStems> paletteRank(stemInfo.size());
+    const float backdrop = static_cast<float>(
+            std::clamp(trackstar::tuning(QStringLiteral("stem_backdrop_alpha"), 0.35), 0.0, 1.0));
     for (int i = 0; i < stemInfo.size(); i++) {
+        const QString l = stemInfo[i].getLabel().toLower();
         paletteColor[i] = trackstar::stemColor(stemInfo[i].getLabel(), deckIdx, stemInfo[i].getColor());
+        const bool front = l.contains(QStringLiteral("drum")) || l.contains(QStringLiteral("voc"));
+        paletteAlpha[i] = front ? 1.f : backdrop;
+        paletteRank[i] = l.contains(QStringLiteral("voc")) ? 3 : l.contains(QStringLiteral("drum")) ? 2 : l.contains(QStringLiteral("bass")) ? 1 : 0;
+    }
+    auto drawOrder = m_stackOrder;   // same container type as m_stackOrder
+    if (paletteOn) {
+        std::stable_sort(drawOrder.begin(), drawOrder.end(), [&](int a, int b) {
+            return (a < paletteRank.size() ? paletteRank[a] : 0) < (b < paletteRank.size() ? paletteRank[b] : 0);
+        });
     }
     // per stack position: zoom factor (>1 = stretched) and y offset
     QVarLengthArray<double, mixxx::kMaxSupportedStems> stemZoom(numStems);
@@ -260,7 +276,7 @@ bool WaveformRendererStem::preprocessInner() {
 
     for (int visualIdx = 0; visualIdx < stripLength; visualIdx++) {
         int stemLayer = 0;
-        for (int stemIdx : std::as_const(m_stackOrder)) {
+        for (int stemIdx : std::as_const(drawOrder)) {
             if (stemIdx >= stemInfo.size()) {
                 continue;
             }
@@ -296,7 +312,7 @@ bool WaveformRendererStem::preprocessInner() {
                       color_g = stemColor.greenF(),
                       color_b = stemColor.blueF(),
                       color_a = stemColor.alphaF() * (layerIdx ? fillAlpha : outlineAlpha) *
-                        (past ? pastAlpha : 1.f);
+                        (past ? pastAlpha : 1.f) * (paletteOn ? paletteAlpha[stemIdx] : 1.f);
 
                 // Cast to float
                 float max = static_cast<float>(u8max) * allGain;
