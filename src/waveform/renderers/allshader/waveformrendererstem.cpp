@@ -342,19 +342,27 @@ bool WaveformRendererStem::preprocessInner() {
                 }
                 const int yIndex = m_splitStemTracks ? stemIdx : stemLayer;
                 const float yCenter = yIndex * stemBreadth + halfBreadth + yOffset;
-                if (bottomMode && deckIdx == 1) {
-                    // deck B (the lower waveform) mirrors deck A: bars hang from the top edge
-                    const float yTop = yIndex * stemBreadth;
-                    vertexUpdater.addRectangle(
-                            {fVisualIdx - halfStripSize, yTop},
-                            {fVisualIdx + halfStripSize, std::min(yTop + 2.f * height, yTop + 2.f * halfBreadth)},
-                            {color_r, color_g, color_b, color_a});
-                } else if (bottomMode) {
-                    const float yBottom = yIndex * stemBreadth + 2.f * halfBreadth;
-                    vertexUpdater.addRectangle(
-                            {fVisualIdx - halfStripSize, std::max(yBottom - 2.f * height, yBottom - 2.f * halfBreadth)},
-                            {fVisualIdx + halfStripSize, yBottom},
-                            {color_r, color_g, color_b, color_a});
+                if (bottomMode) {
+                    // layers behind each other: the back layer's baseline is lifted away from the
+                    // edge (stem_parallax_spread × half the breadth), the front layer sits on the
+                    // edge, so what is behind peeks out above (deck A) or below (deck B, mirrored)
+                    const float lift = static_cast<float>(spread) * 0.5f * halfBreadth *
+                            (numStems > 1 ? (1.f - static_cast<float>(stemLayer) / (numStems - 1)) : 0.f);
+                    const float h = std::min(2.f * height, 2.f * halfBreadth - lift);
+                    if (deckIdx == 1) {
+                        // deck B (lower waveform) hangs from the top edge
+                        const float yTop = yIndex * stemBreadth + lift;
+                        vertexUpdater.addRectangle(
+                                {fVisualIdx - halfStripSize, yTop},
+                                {fVisualIdx + halfStripSize, yTop + h},
+                                {color_r, color_g, color_b, color_a});
+                    } else {
+                        const float yBottom = yIndex * stemBreadth + 2.f * halfBreadth - lift;
+                        vertexUpdater.addRectangle(
+                                {fVisualIdx - halfStripSize, yBottom - h},
+                                {fVisualIdx + halfStripSize, yBottom},
+                                {color_r, color_g, color_b, color_a});
+                    }
                 } else {
                     vertexUpdater.addRectangle(
                             {fVisualIdx - halfStripSize,
