@@ -47,7 +47,7 @@ Variables:
           </SingletonContainer>
         </Children>
       </WidgetGroup>
-      <WidgetGroup><Size>1min,6f</Size></WidgetGroup>
+      <WidgetGroup><Size>1min,14f</Size></WidgetGroup>
 
       <!-- 2+3. tempofader (buitenkant, verticaal) | spinny + Play/CUE, daaronder BPM/key + filter -->
       <WidgetGroup>
@@ -165,24 +165,24 @@ Variables:
           <WidgetGroup><Size>1me,1min</Size></WidgetGroup>
         </Children>
       </WidgetGroup>
-      <WidgetGroup><Size>1min,6f</Size></WidgetGroup>
+      <WidgetGroup><Size>1min,14f</Size></WidgetGroup>
 
-      <!-- 4. overview (energiecurve in de fork) -->
+      <!-- 4. overview (energiecurve in de fork), flink hoger (Brecht 07-10) -->
       <WidgetGroup>
         <Layout>horizontal</Layout>
-        <Size>1me,56f</Size>
+        <Size>1me,120f</Size>
         <Children>
           <SingletonContainer>
             <ObjectName>DeckOverviewRow<Variable name="chanNum"/></ObjectName>
           </SingletonContainer>
         </Children>
       </WidgetGroup>
-      <WidgetGroup><Size>1min,6f</Size></WidgetGroup>
+      <WidgetGroup><Size>1min,14f</Size></WidgetGroup>
 
 
       <!-- 5. hotcues 2 × 4 -->
       <Template src="skin:/decks/hotcues_deck_column.xml"/>
-      <WidgetGroup><Size>1min,6f</Size></WidgetGroup>
+      <WidgetGroup><Size>1min,14f</Size></WidgetGroup>
 
       <!-- 6. stems -->
       <Template src="skin:/decks/stem_strip.xml">

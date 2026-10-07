@@ -17,7 +17,7 @@ Variables:
     <TooltipId>waveform_overview</TooltipId>
     <Style></Style>
     <Channel><Variable name="chanNum"/></Channel>
-    <Size>180me,56f</Size>
+    <Size>180me,120f</Size>
     <BgColor>#1D2024</BgColor>
     <SignalColor><Variable name="SignalColor"/></SignalColor>
     <SignalLowColor><Variable name="OvLow"/></SignalLowColor>

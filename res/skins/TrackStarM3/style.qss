@@ -4062,7 +4062,7 @@ QMainWindow { background: #111318; }
   border-radius: 28px;
 }
 #DeckZone, #DeckZoneB { padding: 12px 10px; margin: 8px; }
-#MiddleColumn { padding: 8px; background-color: transparent; border-color: transparent; }
+#MiddleColumn { padding: 0px; margin: 8px 2px; background-color: transparent; border-color: transparent; }
 /* spelend deck: blauwe rand (WidgetGroup highlight ← [ChannelN],play_latched, zie skin.xml) */
 #DeckZone[highlight="1"] { border-color: #AAC7FF; }
 #DeckZoneB[highlight="1"] { border-color: #DDBCE0; }
@@ -4124,11 +4124,11 @@ WPushButton#StemMuteButton[displayValue="1"] { background-color: transparent; co
 #FxKnobName { color: #9A9CA6; font-size: 10px; font-weight: 600; qproperty-alignment: 'AlignCenter'; background-color: transparent; }
 #FxNamePill[highlight="1"] #FxKnobName { color: #DAE2F9; }
 #FxKnobToggle { background-color: transparent; border: 0px; }
-#FxKicker { color: #9A9CA6; font-size: 9px; font-weight: 600; letter-spacing: 1px; qproperty-alignment: 'AlignCenter'; }
+#FxKicker { color: #9A9CA6; font-size: 10px; font-weight: 600; letter-spacing: 1px; qproperty-alignment: 'AlignHCenter | AlignTop'; }
 WSpinny, #SpinnyCover, #SpinnyWell, #SpinnyCoverContainer { background-color: transparent; border: 0px; }
 
 /* ---- crossfader in de middenkolom ---- */
-#DeckCrossfaderBar { background-color: #1D2024; border-radius: 20px; margin: 6px 0px 0px 0px; padding: 8px 14px; }
+#DeckCrossfaderBar { background-color: #1D2024; border-radius: 20px; margin: 10px 0px 0px 0px; padding: 6px 16px; qproperty-layoutAlignment: 'AlignHCenter | AlignVCenter'; }
 #XfaderLabelA, #XfaderLabelB { font-size: 13px; font-weight: 600; border-radius: 14px; min-width: 28px; min-height: 28px; }
 #XfaderLabelA { background-color: #284777; color: #D6E3FF; }
 #XfaderLabelB { background-color: #573E5C; color: #FAD8FD; }

@@ -7,10 +7,10 @@ Variables: chanNum
     <ObjectName>FilterKnobBox</ObjectName>
     <Layout>vertical</Layout>
     <SizePolicy>min,min</SizePolicy>
-    <MinimumSize>60,64</MinimumSize>
-    <MaximumSize>60,64</MaximumSize>
+    <MinimumSize>64,66</MinimumSize>
+    <MaximumSize>64,66</MaximumSize>
     <Children>
-      <Label><ObjectName>FxKicker</ObjectName><Text>FILTER</Text><Size>60f,12f</Size></Label>
+      <WidgetGroup><Size>1min,8f</Size></WidgetGroup>
       <WidgetGroup>
         <Layout>horizontal</Layout>
         <SizePolicy>min,min</SizePolicy>
@@ -18,9 +18,9 @@ Variables: chanNum
           <WidgetGroup><Size>1me,1min</Size></WidgetGroup>
           <KnobComposed>
             <TooltipId>QuickEffectRack_super1</TooltipId>
-            <Size>32f,32f</Size>
-            <Knob>skin:/knobs_sliders/knob_white.svg</Knob>
-            <BackPath>skin:/knobs_sliders/knob_bg.svg</BackPath>
+            <Size>40f,40f</Size>
+            <Knob>skin:/knobs_sliders/knob_m3.svg</Knob>
+            <BackPath>skin:/knobs_sliders/knob_bg_m3.svg</BackPath>
             <MinAngle>-130</MinAngle>
             <MaxAngle>130</MaxAngle>
             <Connection>
@@ -30,7 +30,7 @@ Variables: chanNum
           <WidgetGroup><Size>1me,1min</Size></WidgetGroup>
         </Children>
       </WidgetGroup>
-      <WidgetGroup><Size>1min,18f</Size></WidgetGroup>
+      <Label><ObjectName>FxKicker</ObjectName><Text>FILTER</Text><Size>64f,16f</Size></Label>
     </Children>
   </WidgetGroup>
 </Template>
