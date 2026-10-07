@@ -210,7 +210,7 @@ bool WaveformRendererStem::preprocessInner() {
     //   [TrackStar],stem_parallax_slip   also in the slip overlay (0/1)
     const double parallax = m_splitStemTracks
             ? 0.0
-            : std::clamp(trackstar::tuning(QStringLiteral("stem_parallax"), 0.0), 0.0, 1.0);   // 07-10: uit (liep "naast" de playhead)
+            : std::clamp(trackstar::tuning(QStringLiteral("stem_parallax"), 0.45), 0.0, 1.0);
     const double spread = m_splitStemTracks
             ? 0.0
             : std::clamp(trackstar::tuning(QStringLiteral("stem_parallax_spread"), 0.30), 0.0, 1.0);
@@ -253,7 +253,8 @@ bool WaveformRendererStem::preprocessInner() {
         paletteColor[i] = trackstar::stemColor(stemInfo[i].getLabel(), deckIdx, stemInfo[i].getColor());
         const bool front = l.contains(QStringLiteral("drum")) || l.contains(QStringLiteral("voc"));
         paletteAlpha[i] = front ? 1.f : backdrop;
-        paletteRank[i] = l.contains(QStringLiteral("voc")) ? 3 : l.contains(QStringLiteral("drum")) ? 2 : l.contains(QStringLiteral("bass")) ? 1 : 0;
+        // drums frontmost (the beat as bright spikes over the vocals), then vocals, bass, other
+        paletteRank[i] = l.contains(QStringLiteral("drum")) ? 3 : l.contains(QStringLiteral("voc")) ? 2 : l.contains(QStringLiteral("bass")) ? 1 : 0;
     }
     auto drawOrder = m_stackOrder;   // same container type as m_stackOrder
     if (paletteOn) {

@@ -55,7 +55,8 @@ QColor stemColor(const QString& label, int deckIdx, const QColor& fileColor) {
         return QColor(0xFF, 0xFF, 0xFF);
     }
     if (l.contains(QStringLiteral("drum"))) {
-        return purple ? QColor(0xDD, 0xBC, 0xE0) : QColor(0xAA, 0xC7, 0xFF);
+        // brighter than the deck colour so the beat stands out (Brecht 07-10: "drums too dark")
+        return purple ? QColor(0xF2, 0xDD, 0xF5) : QColor(0xD6, 0xE3, 0xFF);
     }
     if (l.contains(QStringLiteral("bass"))) {
         return purple ? QColor(0x9A, 0x6A, 0xA4) : QColor(0x4F, 0x78, 0xB8);
