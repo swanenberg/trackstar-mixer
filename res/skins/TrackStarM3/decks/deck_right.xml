@@ -184,24 +184,26 @@ Variables:
       <Template src="skin:/decks/hotcues_deck_column.xml"/>
       <WidgetGroup><Size>1min,14f</Size></WidgetGroup>
 
-      <!-- 6. stems -->
+      <WidgetGroup><Size>1min,1me</Size></WidgetGroup>
+
+      <!-- 6. stems, onderaan het deck (Brecht 07-10) -->
       <Template src="skin:/decks/stem_strip.xml">
         <SetVariable name="chanNum"><Variable name="chanNum"/></SetVariable>
       </Template>
-      <WidgetGroup><Size>1min,8f</Size></WidgetGroup>
+      <WidgetGroup><Size>1min,12f</Size></WidgetGroup>
+    </Children>
+  </WidgetGroup>
 
-      <WidgetGroup><Size>1min,1me</Size></WidgetGroup>
-
-      <!-- 7. VU helemaal onderaan, in de deckkleur (Brecht 07-10) -->
+      <!-- 7. VU als onderrand van de kaart, buiten de kolom met zijmarges (loopt tot in de ronding) -->
       <WidgetGroup>
         <ObjectName>VuMeterClippingBorder</ObjectName>
         <Layout>horizontal</Layout>
         <SizePolicy>me,min</SizePolicy>
         <Children>
           <VuMeter>
-            <Size>1me,6f</Size>
-            <MinimumSize>60,6</MinimumSize>
-            <MaximumSize>10000,6</MaximumSize>
+            <Size>1me,5f</Size>
+            <MinimumSize>60,5</MinimumSize>
+            <MaximumSize>10000,5</MaximumSize>
             <PathVu scalemode="STRETCH">skin:/graphics/vu_a.svg</PathVu>
             <PathBack scalemode="STRETCH">skin:/graphics/vu_bg.svg</PathBack>
             <Horizontal>true</Horizontal>
@@ -219,6 +221,4 @@ Variables:
           <BindProperty>visible</BindProperty>
         </Connection>
       </WidgetGroup>
-    </Children>
-  </WidgetGroup>
 </Template>

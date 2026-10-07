@@ -4061,7 +4061,9 @@ QMainWindow { background: #111318; }
   border: 2px solid #1D2024;
   border-radius: 28px;
 }
-#DeckZone, #DeckZoneB { padding: 12px 10px; margin: 8px; }
+#DeckZone, #DeckZoneB { padding: 12px 0px 0px 0px; margin: 8px; }
+#DeckColumn1, #DeckColumn2, #DeckColumn3, #DeckColumn4 { margin: 0px 10px; }
+#VuMeterClippingBorder { margin: 0px 14px 6px 14px; }
 #MiddleColumn { padding: 0px; margin: 8px 2px; background-color: transparent; border-color: transparent; }
 /* spelend deck: blauwe rand (WidgetGroup highlight ← [ChannelN],play_latched, zie skin.xml) */
 #DeckZone[highlight="1"] { border-color: #AAC7FF; }
